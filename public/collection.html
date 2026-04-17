@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Collection 2025 — Volombe</title>
+  <meta name="description" content="La collection Volombe 2025 — T-shirts et sweat-shirts chrétiens premium. Broderie artisanale, coton 300g/m². Édition limitée." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ─── Barre titre ─── */
+    .col-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(20px, 3vw, 48px);
+      height: 48px;
+      border-bottom: 1px solid var(--line);
+      background: var(--black);
+    }
+    .col-bar__title {
+      font-family: var(--serif);
+      font-size: .875rem;
+      font-weight: 300;
+      letter-spacing: .06em;
+      color: var(--white);
+    }
+    .col-bar__count {
+      font-size: .4375rem;
+      text-transform: uppercase;
+      letter-spacing: .3em;
+      color: var(--grey);
+    }
+
+    /* ─── Grille plein écran ─── */
+    .col-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      height: calc(100vh - 64px - 48px); /* viewport - nav - barre */
+      background: var(--black);
+    }
+
+    /* ─── Carte produit ─── */
+    .col-card {
+      position: relative;
+      overflow: hidden;
+      background: var(--black-2);
+    }
+    .col-card a {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      text-decoration: none;
+      color: inherit;
+    }
+    .col-card__img-wrap {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .col-card__img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 15%;
+      transition: transform 1s var(--ease), filter .8s;
+      filter: brightness(.92);
+    }
+    .col-card:nth-child(1) .col-card__img { transform: scale(1.15); object-position: center 20%; }
+    .col-card:nth-child(2) .col-card__img { transform: scale(1.38); object-position: center 45%; }
+    .col-card:nth-child(3) .col-card__img { transform: scale(1.06); object-position: center 12%; }
+    .col-card:nth-child(1):hover .col-card__img { transform: scale(1.22); filter: brightness(.65); }
+    .col-card:nth-child(2):hover .col-card__img { transform: scale(1.46); filter: brightness(.65); }
+    .col-card:nth-child(3):hover .col-card__img { transform: scale(1.13); filter: brightness(.65); }
+
+    .col-card__badge {
+      position: absolute;
+      top: 16px; left: 16px;
+      font-size: .4rem;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      padding: 5px 10px;
+      background: var(--gold);
+      color: #080807;
+      z-index: 2;
+    }
+    .col-card__overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8,8,7,.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .4s;
+      z-index: 3;
+    }
+    .col-card:hover .col-card__overlay { opacity: 1; }
+    .col-card__cta {
+      font-size: .4375rem;
+      text-transform: uppercase;
+      letter-spacing: .25em;
+      color: var(--white);
+      border: 1px solid rgba(245,240,232,.55);
+      padding: 12px 28px;
+    }
+    .col-card__meta {
+      flex-shrink: 0;
+      padding: 16px 20px 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--black-2);
+    }
+    .col-card__sub {
+      font-size: .4rem;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      color: var(--grey);
+      margin-bottom: 4px;
+    }
+    .col-card__name {
+      font-family: var(--serif);
+      font-size: clamp(.95rem, 1.4vw, 1.35rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.1;
+    }
+    .col-card__price {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    /* ─── Strip livraison ─── */
+    .col-ship-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(24px, 5vw, 80px);
+      padding: 28px clamp(20px, 4vw, 48px);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--black);
+      flex-wrap: wrap;
+    }
+    .col-ship-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .5rem;
+      text-transform: uppercase;
+      letter-spacing: .22em;
+      color: rgba(245,240,232,.45);
+    }
+    .col-ship-item svg { color: var(--gold); flex-shrink: 0; }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 700px) {
+      .col-grid { grid-template-columns: 1fr; height: auto; }
+      .col-card__img-wrap { aspect-ratio: 3/4; flex: none; }
+      .col-ship-strip { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav nav--scrolled" id="nav">
+  <div class="nav__bar">
+    <a href="index.html" class="nav__logo">Volombe</a>
+    <ul class="nav__links">
+      <li><a href="index.html#collection" class="nav__link">Collection</a></li>
+      <li><a href="index.html#manifesto" class="nav__link">Notre Monde</a></li>
+      <li><a href="index.html#contact" class="nav__link">Contact</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="#" class="nav__icon" aria-label="Rechercher">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </a>
+      <a href="#" class="nav__icon" aria-label="Panier">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-dot">0</span>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MOBILE MENU ===== -->
+<div class="mob-menu" id="mob-menu" aria-hidden="true">
+  <ul class="mob-links">
+    <li><a href="index.html#collection" class="mob-link">Collection</a></li>
+    <li><a href="index.html#manifesto" class="mob-link">Notre Monde</a></li>
+    <li><a href="index.html#contact" class="mob-link">Contact</a></li>
+  </ul>
+  <div class="mob-footer">
+    <span class="mob-footer-txt">Volombe © 2025</span>
+    <span class="mob-footer-txt">Foi &amp; Élégance</span>
+  </div>
+</div>
+
+<!-- ===== BARRE TITRE ===== -->
+<div class="col-bar">
+  <span class="col-bar__title">Collection <em>2025</em></span>
+  <span class="col-bar__count">3 pièces · Édition limitée</span>
+</div>
+
+<!-- ===== GRILLE PLEIN ÉCRAN ===== -->
+<div class="col-grid">
+
+  <!-- Apocalypse 20:11-15 -->
+  <article class="col-card">
+    <a href="product.html">
+      <div class="col-card__img-wrap">
+        <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(2).jpeg"
+             alt="Apocalypse 20:11-15 — Dos imprimé" class="col-card__img" />
+        <span class="col-card__badge">Bestseller</span>
+        <div class="col-card__overlay"><span class="col-card__cta">Voir le produit</span></div>
+      </div>
+      <div class="col-card__meta">
+        <div>
+          <p class="col-card__sub">T-shirt · Oversize · Dos imprimé</p>
+          <p class="col-card__name">Apocalypse 20:11-15</p>
+        </div>
+        <span class="col-card__price">40 €</span>
+      </div>
+    </a>
+  </article>
+
+  <!-- Le Classic -->
+  <article class="col-card">
+    <a href="product-basique.html">
+      <div class="col-card__img-wrap">
+        <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37%20(1).jpeg"
+             alt="Le Classic — T-shirt oversize" class="col-card__img" />
+        <div class="col-card__overlay"><span class="col-card__cta">Voir le produit</span></div>
+      </div>
+      <div class="col-card__meta">
+        <div>
+          <p class="col-card__sub">T-shirt · Oversize · Broderie seule</p>
+          <p class="col-card__name">Le Classic</p>
+        </div>
+        <span class="col-card__price">30 €</span>
+      </div>
+    </a>
+  </article>
+
+  <!-- Sweat-Shirt -->
+  <article class="col-card">
+    <a href="product-verbe.html">
+      <div class="col-card__img-wrap">
+        <img src="images/3-face.png"
+             alt="Sweat-Shirt — Sweat-shirt oversize" class="col-card__img" />
+        <span class="col-card__badge">Nouveau</span>
+        <div class="col-card__overlay"><span class="col-card__cta">Voir le produit</span></div>
+      </div>
+      <div class="col-card__meta">
+        <div>
+          <p class="col-card__sub">Sweat-shirt · Oversize · Broderie</p>
+          <p class="col-card__name">Sweat-Shirt</p>
+        </div>
+        <span class="col-card__price">80 €</span>
+      </div>
+    </a>
+  </article>
+
+</div>
+
+<!-- ===== STRIP LIVRAISON ===== -->
+<div class="col-ship-strip">
+  <span class="col-ship-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8zM1 16h15"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    Livraison offerte dès 80 €
+  </span>
+  <span class="col-ship-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.51"/></svg>
+    Retours sous 14 jours
+  </span>
+  <span class="col-ship-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Paiement sécurisé
+  </span>
+  <span class="col-ship-item">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    Broderie artisanale à la main
+  </span>
+</div>
+
+<!-- ===== BENEFITS ===== -->
+<section class="benefits">
+  <div class="benefits__grid">
+
+    <div class="benefit" data-reveal>
+      <span class="benefit__num" aria-hidden="true">01</span>
+      <div class="benefit__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <h3 class="benefit__title">Broderie artisanale</h3>
+      <p class="benefit__text">Chaque croix brodée à la main. Un geste répété mille fois, pour que chaque pièce soit unique. La technique au service de la conviction.</p>
+    </div>
+
+    <div class="benefit" data-reveal="1">
+      <span class="benefit__num" aria-hidden="true">02</span>
+      <div class="benefit__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3 class="benefit__title">Matière noble</h3>
+      <p class="benefit__text">Coton 300g/m² brossé intérieur. Une épaisseur qui assume sa présence. Lavé, structuré, pensé pour durer au-delà des saisons.</p>
+    </div>
+
+    <div class="benefit" data-reveal="2">
+      <span class="benefit__num" aria-hidden="true">03</span>
+      <div class="benefit__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <h3 class="benefit__title">Édition limitée</h3>
+      <p class="benefit__text">Chaque saison est close. Nous ne réimprimons pas. Ce que vous portez n'existe que pour un temps choisi — ce qui lui donne toute sa valeur.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ÉTIQUETTE ===== -->
+<section class="label-story">
+  <div class="label-story__img">
+    <img src="images/Etiquetteszoome%20sweat.webp"
+         alt="Étiquette intérieure Romains 12:2 — Volombe" loading="lazy" />
+  </div>
+  <div class="label-story__text">
+    <p class="label-story__label" data-reveal>L'intention cachée</p>
+    <h2 class="label-story__title" data-reveal="1">L'étiquette que<br>personne ne voit,<br><em>sauf vous.</em></h2>
+    <p class="label-story__body" data-reveal="2">Cousue à l'intérieur, l'étiquette porte la référence exacte de Romains 12:2. Un rappel intime, à porter contre soi chaque jour. Ce n'est pas de la mode. C'est une déclaration.</p>
+    <div class="label-story__verse" data-reveal="3">
+      <p>« Ne vous conformez pas au siècle présent, mais soyez transformés par le renouvellement de l'intelligence... »</p>
+      <cite>Romains 12 : 2</cite>
+    </div>
+    <a href="index.html#manifesto" class="btn btn--ghost" style="margin-top:36px; align-self:flex-start" data-reveal="4">Notre conviction →</a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer__main">
+    <div class="footer__grid">
+      <div>
+        <a href="index.html" class="footer__logo">Volombe</a>
+        <p class="footer__desc">« Ne vous conformez pas au siècle présent, mais soyez transformés par le renouvellement de l'intelligence. » — Romains 12:2</p>
+        <div class="footer__socials">
+          <a href="#" class="soc" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="soc" aria-label="TikTok">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="footer__col-h">Collection</p>
+        <ul class="footer__list">
+          <li><a href="product.html" class="footer__link">Apocalypse 20:11-15</a></li>
+          <li><a href="product-basique.html" class="footer__link">Le Classic</a></li>
+          <li><a href="product-verbe.html" class="footer__link">Sweat-Shirt</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__col-h">Information</p>
+        <ul class="footer__list">
+          <li><a href="index.html#manifesto" class="footer__link">Notre Monde</a></li>
+          <li><a href="#" class="footer__link">Livraison</a></li>
+          <li><a href="#" class="footer__link">Retours</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__col-h">Contact</p>
+        <ul class="footer__list">
+          <li><a href="index.html#contact" class="footer__link">Newsletter</a></li>
+          <li><a href="mailto:contact@volombe.com" class="footer__link">contact@volombe.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span class="footer__copy">© 2025 Volombe. Tous droits réservés.</span>
+    <nav class="footer__legal">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGV</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* ===== BURGER ===== */
+const burger = document.getElementById('burger');
+const mobMenu = document.getElementById('mob-menu');
+burger.addEventListener('click', () => {
+  const open = burger.classList.toggle('open');
+  mobMenu.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open);
+  mobMenu.setAttribute('aria-hidden', !open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+mobMenu.querySelectorAll('.mob-link').forEach(l => {
+  l.addEventListener('click', () => {
+    burger.classList.remove('open');
+    mobMenu.classList.remove('open');
+    burger.setAttribute('aria-expanded', false);
+    mobMenu.setAttribute('aria-hidden', true);
+    document.body.style.overflow = '';
+  });
+});
+
+/* ===== SCROLL REVEAL ===== */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const delay = (+(e.target.dataset.reveal) || 0) * 120;
+      setTimeout(() => e.target.classList.add('revealed'), delay);
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+</script>
+<script src="cart.js"></script>
+</body>
+</html>

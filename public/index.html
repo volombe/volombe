@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Volombe — Portez votre foi. Avec grâce.</title>
+  <meta name="description" content="Volombe — T-shirts et sweats chrétiens premium. Brodés à la main. Édition limitée." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="nav">
+  <div class="nav__bar">
+    <a href="index.html" class="nav__logo">Volombe</a>
+    <ul class="nav__links">
+      <li><a href="#collection" class="nav__link">Collection</a></li>
+      <li><a href="#manifesto" class="nav__link">Notre Monde</a></li>
+      <li><a href="#contact" class="nav__link">Contact</a></li>
+    </ul>
+    <div class="nav__actions">
+      <a href="#" class="nav__icon" aria-label="Rechercher">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </a>
+      <a href="#" class="nav__icon" aria-label="Panier">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="cart-dot">0</span>
+      </a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MOBILE MENU ===== -->
+<div class="mob-menu" id="mob-menu" aria-hidden="true">
+  <ul class="mob-links">
+    <li><a href="#collection" class="mob-link">Collection</a></li>
+    <li><a href="#manifesto" class="mob-link">Notre Monde</a></li>
+    <li><a href="#contact" class="mob-link">Contact</a></li>
+  </ul>
+  <div class="mob-footer">
+    <span class="mob-footer-txt">Volombe © 2025</span>
+    <span class="mob-footer-txt">Foi &amp; Élégance</span>
+  </div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero__text">
+    <p class="hero__eyebrow">Collection 2025</p>
+    <h1 class="hero__h1">Portez<br>votre foi.<br><em>Avec grâce.</em></h1>
+    <p class="hero__sub">Des vêtements chrétiens premium qui ne choisissent pas entre conviction et style. Chaque pièce brodée à la main. Chaque détail, une intention.</p>
+    <div class="hero__ctas">
+      <a href="collection.html" class="btn btn--light btn-lg">Découvrir la collection →</a>
+      <a href="#manifesto" class="btn btn--ghost btn-lg">Notre Monde</a>
+    </div>
+  </div>
+  <div class="hero__img-col">
+    <div class="hero__editorial">
+      <img
+        src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58.jpeg"
+        alt="Broderie Volombe — détail artisanal"
+        class="hero__editorial-img"
+      />
+    </div>
+    <div class="hero__editorial-veil"></div>
+    <div class="hero__divider-line"></div>
+    <div class="hero__img-caption">
+      <span class="hero__img-caption-ref">Romains 12 : 2</span>
+      <span class="hero__img-caption-verse">Ne vous conformez pas au siècle présent.</span>
+    </div>
+  </div>
+  <div class="hero__scroll">
+    <div class="hero__scroll-line"></div>
+    <span class="hero__scroll-txt">Défiler</span>
+  </div>
+</section>
+
+<!-- ===== TICKER ===== -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <span>COTON 300G/M²</span><span class="ticker__sep">·</span>
+    <span>APOCALYPSE 20:11–15</span><span class="ticker__sep">·</span>
+    <span>FOI &amp; ÉLÉGANCE</span><span class="ticker__sep">·</span>
+    <span>NE VOUS CONFORMEZ PAS AU SIÈCLE PRÉSENT</span><span class="ticker__sep">·</span>
+    <span>ROMAINS 12:2</span><span class="ticker__sep">·</span>
+    <span>BRODERIE ARTISANALE</span><span class="ticker__sep">·</span>
+    <span>ÉDITION LIMITÉE</span><span class="ticker__sep">·</span>
+    <span>COTON 300G/M²</span><span class="ticker__sep">·</span>
+    <span>APOCALYPSE 20:11–15</span><span class="ticker__sep">·</span>
+    <span>FOI &amp; ÉLÉGANCE</span><span class="ticker__sep">·</span>
+    <span>NE VOUS CONFORMEZ PAS AU SIÈCLE PRÉSENT</span><span class="ticker__sep">·</span>
+    <span>ROMAINS 12:2</span><span class="ticker__sep">·</span>
+    <span>BRODERIE ARTISANALE</span><span class="ticker__sep">·</span>
+    <span>ÉDITION LIMITÉE</span><span class="ticker__sep">·</span>
+  </div>
+</div>
+
+<!-- ===== MANIFESTO ===== -->
+<section class="manifesto" id="manifesto">
+  <div class="manifesto__inner">
+    <aside class="manifesto__aside" data-reveal>
+      <p class="manifesto__aside-label">Notre Conviction</p>
+      <div class="manifesto__video-wrap">
+        <video class="manifesto__video" autoplay muted loop playsinline>
+          <source src="video/e6dfed90089f483fa99c9699d37435cf.mp4" type="video/mp4" />
+        </video>
+        <div class="manifesto__video-overlay"></div>
+        <span class="manifesto__video-ref" aria-hidden="true">12.2</span>
+      </div>
+    </aside>
+    <div>
+      <h2 class="manifesto__title" data-reveal="1">La foi n'est pas<br>une limite.<br><em>C'est une force.</em></h2>
+      <div class="manifesto__quote-wrap" data-reveal="2">
+        <p class="manifesto__verse-label">Romains 12 : 2</p>
+        <blockquote class="manifesto__quote">« Ne vous conformez pas au siècle présent, mais soyez transformés par le renouvellement de l'intelligence, afin que vous discerniez la volonté de Dieu, ce qui est bon, agréable et parfait. »</blockquote>
+      </div>
+      <p class="manifesto__body" data-reveal="3">Volombe est né d'un refus : celui de choisir entre style et conviction. Nos pièces sont conçues pour ceux qui portent leur foi sans compromis, avec élégance, avec intention.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FULL-BLEED ===== -->
+<section class="full-bleed">
+  <img
+    src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(2).jpeg"
+    alt="Dos — gravure Gustave Doré Apocalypse 20:11-15"
+    class="full-bleed__img"
+    loading="lazy"
+  />
+  <div class="full-bleed__caption" data-reveal>
+    <h2 class="full-bleed__title">L'Art<br>au dos.</h2>
+    <div class="full-bleed__info">
+      <p class="full-bleed__ref">Gustave Doré · 1832</p>
+      <p class="full-bleed__ref" style="margin-top:4px">Apocalypse 20 : 11–15</p>
+      <a href="product.html" class="btn btn--ghost" style="margin-top:16px">Voir la pièce</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COLLECTION ===== -->
+<section class="collection section" id="collection">
+  <div class="collection__hdr" data-reveal>
+    <div>
+      <p class="collection__eyebrow">Saison I · 2025</p>
+      <h2 class="collection__title">La Collection</h2>
+    </div>
+    <a href="#" class="btn btn--ghost">Voir tout →</a>
+  </div>
+  <div class="product-row">
+
+    <!-- L'Apocalypse -->
+    <article class="product-cell" data-reveal>
+      <a href="product.html">
+        <div class="product-cell__img-wrap">
+          <img
+            src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(2).jpeg"
+            alt="T-shirt L'Apocalypse — Dos imprimé Volombe"
+            class="product-cell__img"
+            loading="lazy"
+          />
+          <span class="product-cell__badge">Bestseller</span>
+          <div class="product-cell__overlay"><span class="product-cell__cta-txt">Voir le produit</span></div>
+        </div>
+        <div class="product-cell__meta">
+          <div class="product-cell__info">
+            <p class="product-cell__sub">T-shirt · Oversize · Dos imprimé</p>
+            <p class="product-cell__name">Apocalypse 20:11-15</p>
+          </div>
+          <span class="product-cell__price">40 €</span>
+        </div>
+      </a>
+    </article>
+
+    <!-- Le Classic -->
+    <article class="product-cell" data-reveal="1">
+      <a href="product-basique.html">
+        <div class="product-cell__img-wrap">
+          <img
+            src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37%20(1).jpeg"
+            alt="T-shirt Le Classic — Volombe"
+            class="product-cell__img"
+            loading="lazy"
+          />
+          <div class="product-cell__overlay"><span class="product-cell__cta-txt">Voir le produit</span></div>
+        </div>
+        <div class="product-cell__meta">
+          <div class="product-cell__info">
+            <p class="product-cell__sub">T-shirt · Oversize · Broderie seule</p>
+            <p class="product-cell__name">Le Classic</p>
+          </div>
+          <span class="product-cell__price">30 €</span>
+        </div>
+      </a>
+    </article>
+
+    <!-- Sweat-Shirt -->
+    <article class="product-cell" data-reveal="2">
+      <a href="product-verbe.html">
+        <div class="product-cell__img-wrap">
+          <img
+            src="images/3-face.png"
+            alt="Sweat Sweat-Shirt — Volombe"
+            class="product-cell__img"
+            loading="lazy"
+          />
+          <span class="product-cell__badge">Nouveau</span>
+          <div class="product-cell__overlay"><span class="product-cell__cta-txt">Voir le produit</span></div>
+        </div>
+        <div class="product-cell__meta">
+          <div class="product-cell__info">
+            <p class="product-cell__sub">Sweat-shirt · Oversize · Broderie</p>
+            <p class="product-cell__name">Sweat-Shirt</p>
+          </div>
+          <span class="product-cell__price">80 €</span>
+        </div>
+      </a>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== BENEFITS ===== -->
+<section class="benefits">
+  <div class="benefits__grid">
+
+    <div class="benefit" data-reveal>
+      <span class="benefit__num" aria-hidden="true">01</span>
+      <div class="benefit__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <h3 class="benefit__title">Broderie artisanale</h3>
+      <p class="benefit__text">Chaque croix brodée à la main. Un geste répété mille fois, pour que chaque pièce soit unique. La technique au service de la conviction.</p>
+    </div>
+
+    <div class="benefit" data-reveal="1">
+      <span class="benefit__num" aria-hidden="true">02</span>
+      <div class="benefit__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3 class="benefit__title">Matière noble</h3>
+      <p class="benefit__text">Coton 300g/m² brossé intérieur. Une épaisseur qui assume sa présence. Lavé, structuré, pensé pour durer au-delà des saisons.</p>
+    </div>
+
+    <div class="benefit" data-reveal="2">
+      <span class="benefit__num" aria-hidden="true">03</span>
+      <div class="benefit__icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <h3 class="benefit__title">Édition limitée</h3>
+      <p class="benefit__text">Chaque saison est close. Nous ne réimprimons pas. Ce que vous portez n'existe que pour un temps choisi — ce qui lui donne toute sa valeur.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== LABEL STORY ===== -->
+<section class="label-story">
+  <div class="label-story__img">
+    <img
+      src="images/Etiquetteszoome%20sweat.webp"
+      alt="Étiquette intérieure Romains 12:2 — Volombe"
+      loading="lazy"
+    />
+  </div>
+  <div class="label-story__text">
+    <p class="label-story__label" data-reveal>L'Intention cachée</p>
+    <h2 class="label-story__title" data-reveal="1">L'étiquette que<br>personne ne voit,<br><em>sauf vous</em></h2>
+    <p class="label-story__body" data-reveal="2">Cousue à l'intérieur, l'étiquette porte la référence exacte de Romains 12:2. Un rappel intime, à porter contre soi. Ce n'est pas de la mode. C'est une déclaration.</p>
+    <div class="label-story__verse" data-reveal="3">
+      <p>« Ne vous conformez pas au siècle présent, mais soyez transformés par le renouvellement de l'intelligence... »</p>
+      <cite>Romains 12 : 2</cite>
+    </div>
+    <a href="product.html" class="btn btn--gold" style="margin-top:36px; align-self:flex-start" data-reveal="4">Explorer la pièce</a>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testi">
+  <div class="testi__hdr" data-reveal>
+    <span class="testi__eyebrow">Ils portent Volombe</span>
+    <h2 class="testi__title">Ce qu'ils en disent</h2>
+  </div>
+  <div class="testi__grid">
+
+    <div class="testi-card" data-reveal>
+      <div class="testi-stars">
+        <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+      </div>
+      <p class="testi-body">« Je cherchais quelque chose qui exprime ma foi sans avoir à l'expliquer. Ce t-shirt parle à ceux qui savent, et reste élégant pour les autres. »</p>
+      <div class="testi-author">
+        <span class="testi-initials">S.M</span>
+        <div>
+          <p class="testi-name">Samuel M.</p>
+          <p class="testi-loc">Paris, France</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card" data-reveal="1">
+      <div class="testi-stars">
+        <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+      </div>
+      <p class="testi-body">« La qualité est exceptionnelle. Le coton est épais, la broderie parfaite. Et la gravure au dos — personne ne s'y attend. C'est une vraie œuvre. »</p>
+      <div class="testi-author">
+        <span class="testi-initials">E.K</span>
+        <div>
+          <p class="testi-name">Esther K.</p>
+          <p class="testi-loc">Lyon, France</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="testi-card" data-reveal="2">
+      <div class="testi-stars">
+        <span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span><span class="testi-star">★</span>
+      </div>
+      <p class="testi-body">« L'étiquette Romains 12:2. Ce détail m'a bouleversé. Volombe comprend que la foi n'est pas un accessoire — c'est une identité. Je porte ce t-shirt tous les jours. »</p>
+      <div class="testi-author">
+        <span class="testi-initials">D.N</span>
+        <div>
+          <p class="testi-name">David N.</p>
+          <p class="testi-loc">Bruxelles, Belgique</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== CTA FINAL ===== -->
+<section class="cta-final">
+  <div class="wrap" style="position:relative; z-index:1;">
+    <div class="cta-limited" data-reveal>
+      <span class="cta-limited__dot"></span>Édition Limitée &nbsp;·&nbsp; 2025
+    </div>
+    <h2 class="cta-final__h2" data-reveal="1">Portez quelque chose<br>qui vous <em>dépasse</em>.</h2>
+    <p class="cta-final__sub" data-reveal="2">Les stocks sont limités. Chaque commande est préparée avec soin.</p>
+    <div class="cta-row" data-reveal="3">
+      <a href="product.html" class="btn btn--light btn-lg">Commander maintenant</a>
+      <a href="#collection" class="btn btn--ghost btn-lg">Voir la collection</a>
+    </div>
+    <div class="cta-trust" data-reveal="4">
+      <span class="trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Broderie garantie
+      </span>
+      <span class="trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8zM1 16h15"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Livraison soignée
+      </span>
+      <span class="trust-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-5.51"/></svg>
+        Retours 14 jours
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEWSLETTER ===== -->
+<section class="newsletter" id="contact">
+  <div class="newsletter__inner">
+    <span class="newsletter__eyebrow" data-reveal>Restez dans l'ère</span>
+    <h2 class="newsletter__title" data-reveal="1">Nouvelles collections,<br>lancements exclusifs.</h2>
+    <p class="newsletter__sub" data-reveal="2">Rien de superflu. Que l'essentiel.</p>
+    <form class="newsletter-form" data-reveal="3" novalidate>
+      <div class="newsletter__row">
+        <input
+          type="email"
+          name="email"
+          placeholder="votre@email.com"
+          required
+          class="newsletter__input"
+          aria-label="Adresse e-mail"
+        />
+        <button type="submit" class="btn btn--gold">S'inscrire</button>
+      </div>
+    </form>
+    <div class="newsletter-success" style="display:none; opacity:0; margin-top:24px">
+      <p>Bienvenue dans la communauté Volombe. ✦</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer__main">
+    <div class="footer__grid">
+      <div>
+        <a href="index.html" class="footer__logo">Volombe</a>
+        <p class="footer__desc">« Ne vous conformez pas au siècle présent, mais soyez transformés par le renouvellement de l'intelligence. » — Romains 12:2</p>
+        <div class="footer__socials">
+          <a href="#" class="soc" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg>
+          </a>
+          <a href="#" class="soc" aria-label="TikTok">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="footer__col-h">Collection</p>
+        <ul class="footer__list">
+          <li><a href="product.html" class="footer__link">Apocalypse 20:11-15</a></li>
+          <li><a href="product-basique.html" class="footer__link">Le Classic</a></li>
+          <li><a href="product-verbe.html" class="footer__link">Sweat-Shirt</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__col-h">Information</p>
+        <ul class="footer__list">
+          <li><a href="#manifesto" class="footer__link">Notre Monde</a></li>
+          <li><a href="#" class="footer__link">Livraison</a></li>
+          <li><a href="#" class="footer__link">Retours</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer__col-h">Contact</p>
+        <ul class="footer__list">
+          <li><a href="#contact" class="footer__link">Newsletter</a></li>
+          <li><a href="mailto:contact@volombe.com" class="footer__link">contact@volombe.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span class="footer__copy">© 2025 Volombe. Tous droits réservés.</span>
+    <nav class="footer__legal">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGV</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+/* ===== NAV SCROLL ===== */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('nav--scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ===== BURGER ===== */
+const burger = document.getElementById('burger');
+const mobMenu = document.getElementById('mob-menu');
+burger.addEventListener('click', () => {
+  const open = burger.classList.toggle('open');
+  mobMenu.classList.toggle('open', open);
+  burger.setAttribute('aria-expanded', open);
+  mobMenu.setAttribute('aria-hidden', !open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+mobMenu.querySelectorAll('.mob-link').forEach(l => {
+  l.addEventListener('click', () => {
+    burger.classList.remove('open');
+    mobMenu.classList.remove('open');
+    burger.setAttribute('aria-expanded', false);
+    mobMenu.setAttribute('aria-hidden', true);
+    document.body.style.overflow = '';
+  });
+});
+
+/* ===== SCROLL REVEAL ===== */
+const revealEls = document.querySelectorAll('[data-reveal]');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = parseInt(entry.target.dataset.reveal) || 0;
+      entry.target.style.transitionDelay = (delay * 0.12) + 's';
+      entry.target.classList.add('revealed');
+      revealObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObs.observe(el));
+
+/* ===== NEWSLETTER ===== */
+const form = document.querySelector('.newsletter-form');
+const success = document.querySelector('.newsletter-success');
+if (form) {
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const input = form.querySelector('input[type="email"]');
+    if (!input.value || !input.validity.valid) {
+      input.focus();
+      return;
+    }
+    form.style.opacity = '0';
+    setTimeout(() => {
+      form.style.display = 'none';
+      success.style.display = 'block';
+      setTimeout(() => { success.style.opacity = '1'; }, 20);
+    }, 350);
+  });
+}
+</script>
+<script src="cart.js"></script>
+</body>
+</html>
