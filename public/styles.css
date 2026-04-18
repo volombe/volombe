@@ -1332,6 +1332,7 @@ ul { list-style: none; }
   object-fit: cover;
   object-position: top center;
   transition: opacity .25s ease, transform .25s ease;
+  mix-blend-mode: multiply;
 }
 .gallery__main:hover img { transform: scale(1.03); }
 .gallery__thumbs {
@@ -1359,6 +1360,7 @@ ul { list-style: none; }
   object-position: top center;
   opacity: .45;
   transition: opacity .3s, transform .5s var(--ease);
+  mix-blend-mode: multiply;
 }
 .gallery__thumb:hover img,
 .gallery__thumb.active img { opacity: 1; transform: scale(1.06); }
@@ -2029,8 +2031,8 @@ ul { list-style: none; }
     height: 64px;
   }
   .gallery__main img {
-    max-height: 60vw;
-    object-fit: contain;
+    max-height: 80vw;
+    object-fit: cover;
   }
 
   /* Sizes — scroll horizontal */
