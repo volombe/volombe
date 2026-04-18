@@ -1339,7 +1339,7 @@ ul { list-style: none; }
   transform-origin: center center;
   transition: opacity .25s ease, transform .25s ease;
 }
-.gallery__main:hover img { transform: scale(1.03); }
+.gallery__main:hover img { transform: scale(1.8); }
 .gallery__thumbs {
   display: grid;
   grid-template-columns: repeat(6,1fr);
