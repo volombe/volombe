@@ -109,13 +109,13 @@ document.addEventListener('click', e => {
       if (!img) return;
 
       main.style.opacity   = '0';
-      main.style.transform = 'scale(.97)';
+      main.style.transform = 'scale(1.75)';
 
       setTimeout(() => {
         main.src = img.src;
         main.alt = img.alt;
         main.style.opacity   = '1';
-        main.style.transform = 'scale(1)';
+        main.style.transform = 'scale(1.8)';
       }, 220);
 
       thumbs.forEach(t => t.classList.remove('active'));
