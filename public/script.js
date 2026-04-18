@@ -108,14 +108,12 @@ document.addEventListener('click', e => {
       const img = thumb.querySelector('img');
       if (!img) return;
 
-      main.style.opacity   = '0';
-      main.style.transform = 'scale(1.75)';
+      main.style.opacity = '0';
 
       setTimeout(() => {
         main.src = img.src;
         main.alt = img.alt;
-        main.style.opacity   = '1';
-        main.style.transform = 'scale(1.8)';
+        main.style.opacity = '1';
       }, 220);
 
       thumbs.forEach(t => t.classList.remove('active'));
@@ -123,7 +121,7 @@ document.addEventListener('click', e => {
     });
   });
 
-  main.style.transition = 'opacity .22s ease, transform .22s ease';
+  main.style.transition = 'opacity .22s ease';
 })();
 
 /* ════════════════════════════════════════════════════════════
