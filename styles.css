@@ -1334,7 +1334,9 @@ ul { list-style: none; }
   height: 100%;
   object-fit: contain;
   object-position: center center;
-  padding: 20px;
+  padding: 10px;
+  transform: scale(1.15);
+  transform-origin: center center;
   transition: opacity .25s ease, transform .25s ease;
 }
 .gallery__main:hover img { transform: scale(1.03); }
@@ -2035,11 +2037,12 @@ ul { list-style: none; }
     height: 64px;
   }
   .gallery__main {
-    height: 360px;
+    height: 380px;
   }
   .gallery__main img {
     object-fit: contain;
-    padding: 16px;
+    padding: 10px;
+    transform: scale(1.15);
   }
 
   /* Sizes — scroll horizontal */
