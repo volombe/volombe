@@ -1340,6 +1340,19 @@ ul { list-style: none; }
   transition: opacity .22s ease;
 }
 .gallery__main:hover img { transform: scale(1.8); transition: opacity .22s ease; }
+
+/* Sweat-shirt — produit entier visible sans zoom */
+.page-sweat .gallery__main img,
+.page-sweat .gallery__main:hover img {
+  transform: scale(1);
+  padding: 12px;
+}
+
+/* Le Classic — zoom léger */
+.page-classic .gallery__main img,
+.page-classic .gallery__main:hover img {
+  transform: scale(1.5);
+}
 .gallery__thumbs {
   display: grid;
   grid-template-columns: repeat(6,1fr);
