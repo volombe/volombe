@@ -15,6 +15,10 @@ interface CartItem {
 }
 
 export async function POST(req: NextRequest) {
+  // Log sécurisé : affiche les 8 premiers et 4 derniers caractères de la clé
+  const key = process.env.STRIPE_SECRET_KEY || '';
+  console.log('[Volombe] STRIPE_SECRET_KEY preview:', key.slice(0, 8) + '...' + key.slice(-4), '| longueur:', key.length);
+
   try {
     const items: CartItem[] = await req.json();
 
