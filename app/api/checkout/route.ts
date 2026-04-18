@@ -51,10 +51,13 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (err) {
-    console.error('Stripe error:', err);
+  } catch (err: any) {
+    console.error('[Volombe] Stripe error type:', err?.type);
+    console.error('[Volombe] Stripe error code:', err?.code);
+    console.error('[Volombe] Stripe error message:', err?.message);
+    console.error('[Volombe] Stripe error raw:', err);
     return NextResponse.json(
-      { error: 'Erreur lors de la création de la session de paiement.' },
+      { error: err?.message || 'Erreur inconnue' },
       { status: 500 }
     );
   }
