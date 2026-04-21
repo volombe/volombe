@@ -108,20 +108,15 @@ document.addEventListener('click', e => {
       const img = thumb.querySelector('img');
       if (!img) return;
 
-      main.style.opacity = '0';
-
-      setTimeout(() => {
-        main.src = img.src;
-        main.alt = img.alt;
-        main.style.opacity = '1';
-      }, 220);
+      // Changer uniquement le src — aucune modification de style
+      // pour ne jamais interférer avec le transform/zoom défini en CSS
+      main.src = img.src;
+      main.alt = img.alt;
 
       thumbs.forEach(t => t.classList.remove('active'));
       thumb.classList.add('active');
     });
   });
-
-  main.style.transition = 'opacity .22s ease';
 })();
 
 /* ════════════════════════════════════════════════════════════
