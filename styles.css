@@ -1348,10 +1348,13 @@ ul { list-style: none; }
   padding: 12px;
 }
 
-/* Le Classic — zoom léger */
+/* Le Classic — t-shirt entier centré */
 .page-classic .gallery__main img,
 .page-classic .gallery__main:hover img {
-  transform: scale(1.5);
+  transform: scale(1);
+  object-fit: contain;
+  object-position: center center;
+  padding: 8px;
 }
 
 /* Apocalypse — géré par JS inline selon miniature active */
