@@ -1353,6 +1353,19 @@ ul { list-style: none; }
 .page-classic .gallery__main:hover img {
   transform: scale(1.5);
 }
+
+/* Apocalypse — contain par défaut, zoom toggle sur le dos imprimé */
+.page-apocalypse .gallery__main img,
+.page-apocalypse .gallery__main:hover img {
+  transform: scale(1.8);
+  object-fit: contain;
+  cursor: default;
+}
+.page-apocalypse .gallery__main img.zoomed {
+  transform: scale(1.4);
+  object-fit: cover;
+  cursor: zoom-out;
+}
 .gallery__thumbs {
   display: grid;
   grid-template-columns: repeat(6,1fr);

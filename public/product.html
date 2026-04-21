@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
+<body class="page-apocalypse">
 
 <!-- ===== NAV (scrolled — product page) ===== -->
 <nav class="nav nav--scrolled" id="nav">
@@ -222,7 +222,7 @@
 <!-- ===== LOOKBOOK ===== -->
 <div class="lookbook">
   <div class="lb-cell">
-    <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(1).jpeg" alt="L'Apocalypse — face" loading="lazy" />
+    <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(1).jpeg" alt="L'Apocalypse — face" loading="lazy" style="object-position: center center;" />
     <span class="lb-label">Face</span>
   </div>
   <div class="lb-cell">
@@ -489,13 +489,26 @@ mobMenu.querySelectorAll('.mob-link').forEach(l => {
 
 /* ===== GALLERY ===== */
 const mainImg = document.getElementById('gallery-main-img');
-document.querySelectorAll('.gallery__thumb').forEach(thumb => {
+const thumbBtns = Array.from(document.querySelectorAll('.gallery__thumb'));
+
+thumbBtns.forEach((thumb, idx) => {
   thumb.addEventListener('click', () => {
-    document.querySelectorAll('.gallery__thumb').forEach(t => t.classList.remove('active'));
+    thumbBtns.forEach(t => t.classList.remove('active'));
     thumb.classList.add('active');
+    mainImg.classList.remove('zoomed');
     mainImg.src = thumb.dataset.src;
     mainImg.alt = thumb.dataset.alt;
+    // Curseur zoom-in uniquement sur la 2ème miniature (dos imprimé)
+    mainImg.style.cursor = idx === 1 ? 'zoom-in' : 'default';
   });
+});
+
+// Toggle zoom au clic sur l'image principale (uniquement si 2ème miniature active)
+mainImg.addEventListener('click', () => {
+  const activeIdx = thumbBtns.findIndex(t => t.classList.contains('active'));
+  if (activeIdx !== 1) return;
+  mainImg.classList.toggle('zoomed');
+  mainImg.style.cursor = mainImg.classList.contains('zoomed') ? 'zoom-out' : 'zoom-in';
 });
 
 /* ===== SIZE PICKER ===== */
