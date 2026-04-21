@@ -220,7 +220,7 @@ async function showCheckout() {
   /* Supprimer l'éventuel message d'erreur précédent */
   document.querySelectorAll('#checkout-error-msg').forEach(e => e.remove());
 
-  /* URL de l'API — local (next dev) ou production (Netlify) */
+  /* URL de l'API — local (next dev) ou production (Vercel) */
   const apiBase = (window.location.protocol === 'file:')
     ? 'http://localhost:3000'
     : window.location.origin;
