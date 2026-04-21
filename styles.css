@@ -1354,17 +1354,12 @@ ul { list-style: none; }
   transform: scale(1.5);
 }
 
-/* Apocalypse — contain par défaut, zoom toggle sur le dos imprimé */
-.page-apocalypse .gallery__main img,
-.page-apocalypse .gallery__main:hover img {
-  transform: scale(1.8);
-  object-fit: contain;
-  cursor: default;
+/* Apocalypse — géré par JS inline selon miniature active */
+.page-apocalypse .gallery__main img {
+  transition: transform 0.3s ease, object-fit 0s;
 }
-.page-apocalypse .gallery__main img.zoomed {
-  transform: scale(1.4);
-  object-fit: cover;
-  cursor: zoom-out;
+.page-apocalypse .gallery__main:hover img {
+  /* Pas d'override hover — géré par JS */
 }
 .gallery__thumbs {
   display: grid;
