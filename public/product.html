@@ -501,11 +501,11 @@ function applyImgStyle(idx) {
     mainImg.style.cursor = 'zoom-in';
     mainImg.style.padding = '8px';
   } else {
-    // Face et broderie : zoom fort, cover
-    mainImg.style.objectFit = 'cover';
-    mainImg.style.transform = 'scale(1.8)';
-    mainImg.style.cursor = 'default';
-    mainImg.style.padding = '0';
+    // Face et broderie : zoom scale(1.8) — même rendu qu'avant
+    mainImg.style.objectFit = '';
+    mainImg.style.transform = '';
+    mainImg.style.cursor = '';
+    mainImg.style.padding = '';
   }
 }
 
@@ -518,9 +518,6 @@ thumbBtns.forEach((thumb, idx) => {
     applyImgStyle(idx);
   });
 });
-
-// Initialiser avec l'index 0 (face avant active au chargement)
-applyImgStyle(0);
 
 // Toggle zoom au clic sur l'image principale (uniquement si 2ème miniature active)
 mainImg.addEventListener('click', () => {
