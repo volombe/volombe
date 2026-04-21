@@ -493,14 +493,8 @@ document.querySelectorAll('.gallery__thumb').forEach(thumb => {
   thumb.addEventListener('click', () => {
     document.querySelectorAll('.gallery__thumb').forEach(t => t.classList.remove('active'));
     thumb.classList.add('active');
-    mainImg.style.opacity = '0';
-    mainImg.style.transform = 'scale(.97)';
-    setTimeout(() => {
-      mainImg.src = thumb.dataset.src;
-      mainImg.alt = thumb.dataset.alt;
-      mainImg.style.opacity = '1';
-      mainImg.style.transform = 'scale(1)';
-    }, 200);
+    mainImg.src = thumb.dataset.src;
+    mainImg.alt = thumb.dataset.alt;
   });
 });
 
