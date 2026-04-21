@@ -518,14 +518,34 @@ mobMenu.querySelectorAll('.mob-link').forEach(l => {
 
 /* ===== GALLERY ===== */
 const mainImg = document.getElementById('gallery-main-img');
-document.querySelectorAll('.gallery__thumb').forEach(thumb => {
+const thumbBtns = Array.from(document.querySelectorAll('.gallery__thumb'));
+
+function applyClassicStyle(idx) {
+  if (idx === 0 || idx === 1) {
+    // Face et dos : agrandir pour remplir l'espace blanc
+    mainImg.style.transform    = 'scale(1.45)';
+    mainImg.style.objectFit    = 'contain';
+    mainImg.style.padding      = '0';
+  } else {
+    // Broderie : affichage normal centré
+    mainImg.style.transform    = 'scale(1)';
+    mainImg.style.objectFit    = 'contain';
+    mainImg.style.padding      = '8px';
+  }
+}
+
+thumbBtns.forEach((thumb, idx) => {
   thumb.addEventListener('click', () => {
-    document.querySelectorAll('.gallery__thumb').forEach(t => t.classList.remove('active'));
+    thumbBtns.forEach(t => t.classList.remove('active'));
     thumb.classList.add('active');
     mainImg.src = thumb.dataset.src;
     mainImg.alt = thumb.dataset.alt;
+    applyClassicStyle(idx);
   });
 });
+
+// Appliquer le style de la miniature active au chargement (thumb 0)
+applyClassicStyle(0);
 
 /* ===== SIZE PICKER ===== */
 document.getElementById('size-picker').addEventListener('click', e => {
