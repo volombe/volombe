@@ -452,19 +452,62 @@ mobMenu.querySelectorAll('.mob-link').forEach(l => {
 });
 
 /* ===== GALLERY ===== */
-const mainImg = document.getElementById('gallery-main-img');
-document.querySelectorAll('.gallery__thumb').forEach(btn => {
+const mainImg    = document.getElementById('gallery-main-img');
+const galleryMain = document.getElementById('gallery-main');
+const thumbBtns  = Array.from(document.querySelectorAll('.gallery__thumb'));
+
+function applySweatStyle(idx) {
+  mainImg.classList.remove('zoomed');
+  if (idx === 0) {
+    galleryMain.style.background  = '#ffffff';
+    mainImg.style.objectFit       = 'contain';
+    mainImg.style.objectPosition  = 'center';
+    mainImg.style.mixBlendMode    = 'multiply';
+    mainImg.style.padding         = '8px';
+    mainImg.style.width           = '100%';
+    mainImg.style.maxHeight       = '100%';
+    mainImg.style.transform       = '';
+    mainImg.style.transition      = 'transform 0.3s ease';
+    mainImg.style.cursor          = 'zoom-in';
+  } else {
+    galleryMain.style.background  = '';
+    mainImg.style.objectFit       = '';
+    mainImg.style.objectPosition  = '';
+    mainImg.style.mixBlendMode    = '';
+    mainImg.style.padding         = '';
+    mainImg.style.width           = '';
+    mainImg.style.maxHeight       = '';
+    mainImg.style.transform       = '';
+    mainImg.style.transition      = '';
+    mainImg.style.cursor          = '';
+  }
+}
+
+thumbBtns.forEach((btn, idx) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.gallery__thumb').forEach(b => b.classList.remove('active'));
+    thumbBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     mainImg.style.opacity = '0';
     setTimeout(() => {
       mainImg.src = btn.dataset.src;
       mainImg.alt = btn.dataset.alt;
+      applySweatStyle(idx);
       mainImg.style.opacity = '1';
     }, 200);
   });
 });
+
+/* Zoom toggle — index 0 uniquement */
+mainImg.addEventListener('click', () => {
+  const activeIdx = thumbBtns.findIndex(t => t.classList.contains('active'));
+  if (activeIdx !== 0) return;
+  const isZoomed = mainImg.classList.toggle('zoomed');
+  mainImg.style.transform = isZoomed ? 'scale(1.3)' : '';
+  mainImg.style.cursor    = isZoomed ? 'zoom-out' : 'zoom-in';
+});
+
+/* Style initial — miniature 0 active au chargement */
+applySweatStyle(0);
 
 /* ===== SIZE PICKER ===== */
 document.querySelectorAll('.sz').forEach(btn => {
