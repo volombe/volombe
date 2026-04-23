@@ -9,8 +9,281 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
+
+<!-- ===== INTRO CINÉMATIQUE ===== -->
+<div id="vl-intro">
+
+  <!-- Couche 1 — Lames -->
+  <div id="vl-panels">
+    <div class="vl-panel" id="vl-p1">
+      <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(2).jpeg" alt="" />
+      <div class="vl-ov"></div>
+    </div>
+    <div class="vl-panel" id="vl-p2">
+      <img src="images/3-face.png" alt="" />
+      <div class="vl-ov"></div>
+    </div>
+    <div class="vl-panel" id="vl-p3">
+      <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.23.58.jpeg" alt="" />
+      <div class="vl-ov"></div>
+    </div>
+  </div>
+
+  <!-- Couche 2 — Centre -->
+  <div id="vl-center">
+    <div id="vl-logo-wrap"><span>V</span><span>O</span><span>L</span><span>O</span><span>M</span><span>B</span><span>E</span></div>
+    <div id="vl-line"></div>
+    <div id="vl-tagline">Foi &amp; Élégance</div>
+  </div>
+
+  <!-- Couche 3 — Nom produit -->
+  <div id="vl-product-name">Apocalypse 20:11–15</div>
+
+  <!-- Couche 4 — Coins -->
+  <div id="vl-corner-tl">VOLOMBE</div>
+  <div id="vl-corner-br">2025</div>
+
+  <!-- Couche 5 — Flèche -->
+  <div id="vl-arrow">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <polyline points="2,5 8,11 14,5" stroke="#b8996a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+
+<style>
+#vl-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  overflow: hidden;
+}
+#vl-panels {
+  position: absolute;
+  inset: 0;
+}
+.vl-panel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+}
+.vl-panel img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.vl-ov {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+#vl-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  gap: 16px;
+  pointer-events: none;
+}
+#vl-logo-wrap {
+  display: flex;
+  gap: 0.05em;
+  overflow: hidden;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(4rem, 11vw, 8.5rem);
+  letter-spacing: 0.3em;
+  color: #f5f0e8;
+}
+#vl-logo-wrap span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+}
+#vl-line {
+  width: 0;
+  height: 0.5px;
+  background: #b8996a;
+  margin: 0 auto;
+}
+#vl-tagline {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200;
+  font-size: 10px;
+  letter-spacing: 0.45em;
+  color: #b8996a;
+  text-transform: uppercase;
+  opacity: 0;
+}
+#vl-product-name {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  color: rgba(245,240,232,0.35);
+  letter-spacing: 0.25em;
+  opacity: 0;
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+}
+#vl-corner-tl {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(245,240,232,0.18);
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+#vl-corner-br {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: rgba(245,240,232,0.18);
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+#vl-arrow {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+</style>
+
+<script>
+(function () {
+  const intro = document.getElementById('vl-intro');
+  document.body.style.overflow = 'hidden';
+
+  /* Préchargement des 3 images */
+  const srcs = [
+    'images/WhatsApp%20Image%202026-03-24%20at%2022.23.58%20(2).jpeg',
+    'images/3-face.png',
+    'images/WhatsApp%20Image%202026-03-24%20at%2022.23.58.jpeg'
+  ];
+  let done = 0;
+  srcs.forEach(s => {
+    const i = new Image();
+    i.onload = i.onerror = () => { if (++done >= srcs.length) runTimeline(); };
+    i.src = s;
+  });
+
+  function runTimeline() {
+    const panels      = document.querySelectorAll('.vl-panel');
+    const pImgs       = Array.from(panels).map(p => p.querySelector('img'));
+    const productName = document.getElementById('vl-product-name');
+    const letters     = document.querySelectorAll('#vl-logo-wrap span');
+    const line        = document.getElementById('vl-line');
+    const tagline     = document.getElementById('vl-tagline');
+    const cornerTl    = document.getElementById('vl-corner-tl');
+    const cornerBr    = document.getElementById('vl-corner-br');
+    const arrow       = document.getElementById('vl-arrow');
+    const products    = ['Apocalypse 20:11–15', 'Sweat-Shirt', 'Le Classic'];
+
+    /* État initial des images (scale 1.08) */
+    gsap.set(pImgs, { scale: 1.08 });
+
+    const tl = gsap.timeline();
+
+    /* Coins */
+    tl.to([cornerTl, cornerBr], { opacity: 1, duration: 0.5 }, 0.3);
+
+    /* Panel 1 — gauche→droite */
+    tl.to(panels[0], {
+      clipPath: 'polygon(-10% 0%, 100% 0%, 110% 100%, 0% 100%)',
+      duration: 0.9, ease: 'power3.out'
+    }, 0.0);
+    tl.to(pImgs[0], { scale: 1.0, duration: 0.9, ease: 'power3.out' }, 0.0);
+
+    /* Nom produit 1 */
+    tl.to(productName, { opacity: 1, duration: 0.4 }, 0.1);
+
+    /* Lettres VOLOMBE */
+    tl.to(letters, { y: 0, opacity: 1, duration: 0.8, stagger: 0.07, ease: 'power4.out' }, 0.4);
+
+    /* Panel 2 — droite→gauche (clip inversé) */
+    tl.set(panels[1], { clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)' }, 1.2);
+    tl.to(panels[1], {
+      clipPath: 'polygon(0% 0%, 110% 0%, 100% 100%, -10% 100%)',
+      duration: 0.9, ease: 'power3.out'
+    }, 1.2);
+    tl.to(pImgs[1], { scale: 1.0, duration: 0.9, ease: 'power3.out' }, 1.2);
+
+    /* Trait doré */
+    tl.to(line, { width: 56, duration: 0.8, ease: 'power3.out' }, 1.3);
+
+    /* Nom produit 2 */
+    tl.to(productName, { opacity: 0, duration: 0.2 }, 1.2);
+    tl.call(() => { productName.textContent = products[1]; }, [], 1.42);
+    tl.to(productName, { opacity: 1, duration: 0.4 }, 1.42);
+
+    /* Panel 3 — gauche→droite */
+    tl.set(panels[2], { clipPath: 'polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%)' }, 2.4);
+    tl.to(panels[2], {
+      clipPath: 'polygon(-10% 0%, 100% 0%, 110% 100%, 0% 100%)',
+      duration: 0.9, ease: 'power3.out'
+    }, 2.4);
+    tl.to(pImgs[2], { scale: 1.0, duration: 0.9, ease: 'power3.out' }, 2.4);
+
+    /* Sous-titre */
+    tl.to(tagline, { opacity: 1, duration: 0.6 }, 1.8);
+
+    /* Nom produit 3 */
+    tl.to(productName, { opacity: 0, duration: 0.2 }, 2.4);
+    tl.call(() => { productName.textContent = products[2]; }, [], 2.62);
+    tl.to(productName, { opacity: 1, duration: 0.4 }, 2.62);
+
+    /* Flèche */
+    tl.to(arrow, { opacity: 1, duration: 0.4 }, 3.2);
+    tl.to(arrow, { y: -6, duration: 0.8, repeat: -1, yoyo: true, ease: 'sine.inOut' }, 3.6);
+  }
+
+  /* Disparition au scroll / touch / click */
+  let gone = false;
+  function dismiss() {
+    if (gone) return;
+    gone = true;
+    gsap.to(intro, {
+      opacity: 0, y: -40, duration: 0.7, ease: 'power2.in',
+      onComplete: () => {
+        intro.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+  }
+  window.addEventListener('wheel',      dismiss, { passive: true });
+  window.addEventListener('touchmove',  dismiss, { passive: true });
+  intro.addEventListener('click',       dismiss);
+})();
+</script>
 
 <!-- ===== NAV ===== -->
 <nav class="nav" id="nav">
