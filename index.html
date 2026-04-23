@@ -40,7 +40,7 @@
   <div id="vl-center">
     <div id="vl-logo-wrap"><span>V</span><span>O</span><span>L</span><span>O</span><span>M</span><span>B</span><span>E</span></div>
     <div id="vl-line"></div>
-    <div id="vl-tagline">Foi &amp; Élégance</div>
+    <div id="vl-tagline"><span id="vl-tagline-txt">Foi &amp; Élégance</span></div>
   </div>
 
   <!-- Couche 3 — Nom produit -->
@@ -144,6 +144,11 @@
   letter-spacing: 0.45em;
   color: #b8996a;
   text-transform: uppercase;
+  overflow: hidden;
+}
+#vl-tagline-txt {
+  display: inline-block;
+  transform: translateY(100%);
   opacity: 0;
 }
 #vl-product-name {
@@ -221,7 +226,7 @@
     const productName = document.getElementById('vl-product-name');
     const letters     = document.querySelectorAll('#vl-logo-wrap span');
     const line        = document.getElementById('vl-line');
-    const tagline     = document.getElementById('vl-tagline');
+    const tagline     = document.getElementById('vl-tagline-txt');
     const cornerTl    = document.getElementById('vl-corner-tl');
     const cornerBr    = document.getElementById('vl-corner-br');
     const arrow       = document.getElementById('vl-arrow');
@@ -264,7 +269,7 @@
     tl.to(productName, { opacity: 1, duration: 0.4 }, 1.82);
 
     /* Sous-titre */
-    tl.to(tagline, { opacity: 1, duration: 0.6 }, 1.8);
+    tl.to(tagline, { y: 0, opacity: 1, duration: 0.7, ease: 'power4.out' }, 1.8);
 
     /* Panel 3 entre t=3.2s / Panel 2 sort simultanément */
     tl.to(panels[2], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.4, ease: 'power2.inOut' }, 3.2);
