@@ -33,6 +33,9 @@
     </div>
   </div>
 
+  <!-- Vignette overlay -->
+  <div id="vl-vignette"></div>
+
   <!-- Couche 2 — Centre -->
   <div id="vl-center">
     <div id="vl-logo-wrap"><span>V</span><span>O</span><span>L</span><span>O</span><span>M</span><span>B</span><span>E</span></div>
@@ -75,6 +78,15 @@
   overflow: hidden;
   transform-style: preserve-3d;
   opacity: 0;
+  will-change: transform, opacity;
+}
+#vl-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+  opacity: 0;
+  z-index: 5;
+  pointer-events: none;
 }
 .vl-panel img {
   position: absolute;
@@ -215,12 +227,12 @@
     const arrow       = document.getElementById('vl-arrow');
     const products    = ['Apocalypse 20:11–15', 'Sweat-Shirt', 'Le Classic'];
 
-    /* État initial 3D de tous les panels */
-    gsap.set(panels[0], { rotationY:  25, scale: 0.92, z: -200, opacity: 0 });
-    gsap.set(panels[1], { rotationY: -25, scale: 0.92, z: -200, opacity: 0 });
-    gsap.set(panels[2], { rotationY:  25, scale: 0.92, z: -200, opacity: 0 });
+    const vignette = document.getElementById('vl-vignette');
 
-    /* État initial des images (scale 1.08) */
+    /* État initial — crossfade 3D */
+    gsap.set(panels[0], { rotationY: 15, scale: 0.95, z: -100, opacity: 0 });
+    gsap.set(panels[1], { rotationY: 15, scale: 0.95, z: -100, opacity: 0 });
+    gsap.set(panels[2], { rotationY: 15, scale: 0.95, z: -100, opacity: 0 });
     gsap.set(pImgs, { scale: 1.08 });
 
     const tl = gsap.timeline();
@@ -228,9 +240,9 @@
     /* Coins */
     tl.to([cornerTl, cornerBr], { opacity: 1, duration: 0.5 }, 0.3);
 
-    /* Panel 1 — entre en scène */
-    tl.to(panels[0], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }, 0.0);
-    tl.to(pImgs[0],  { scale: 1.0, duration: 1.1, ease: 'power3.out' }, 0.0);
+    /* Panel 1 — entre (pas de sortant) */
+    tl.to(panels[0], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.4, ease: 'power2.inOut' }, 0.0);
+    tl.to(pImgs[0],  { scale: 1.0, duration: 1.4, ease: 'power2.inOut' }, 0.0);
 
     /* Nom produit 1 */
     tl.to(productName, { opacity: 1, duration: 0.4 }, 0.1);
@@ -238,36 +250,41 @@
     /* Lettres VOLOMBE */
     tl.to(letters, { y: 0, opacity: 1, duration: 0.8, stagger: 0.07, ease: 'power4.out' }, 0.4);
 
-    /* Panel 2 — entre, repousse panel 1 en arrière */
-    tl.to(panels[1], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }, 1.2);
-    tl.to(pImgs[1],  { scale: 1.0, duration: 1.1, ease: 'power3.out' }, 1.2);
-    tl.to(panels[0], { rotationY: -8, scale: 0.96, opacity: 0.4, duration: 0.8, ease: 'power2.out' }, 1.2);
+    /* Panel 2 entre t=1.6s / Panel 1 sort simultanément */
+    tl.to(panels[1], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.4, ease: 'power2.inOut' }, 1.6);
+    tl.to(pImgs[1],  { scale: 1.0, duration: 1.4, ease: 'power2.inOut' }, 1.6);
+    tl.to(panels[0], { opacity: 0, scale: 1.04, z: 80, duration: 1.0, ease: 'power2.in' }, 1.6);
 
     /* Trait doré */
     tl.to(line, { width: 56, duration: 0.8, ease: 'power3.out' }, 1.3);
 
     /* Nom produit 2 */
-    tl.to(productName, { opacity: 0, duration: 0.2 }, 1.2);
-    tl.call(() => { productName.textContent = products[1]; }, [], 1.42);
-    tl.to(productName, { opacity: 1, duration: 0.4 }, 1.42);
-
-    /* Panel 3 — entre, repousse panel 2 et efface panel 1 */
-    tl.to(panels[2], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }, 2.4);
-    tl.to(pImgs[2],  { scale: 1.0, duration: 1.1, ease: 'power3.out' }, 2.4);
-    tl.to(panels[1], { rotationY: -8,  scale: 0.96, opacity: 0.4, duration: 0.8, ease: 'power2.out' }, 2.4);
-    tl.to(panels[0], { rotationY: -15, scale: 0.9,  opacity: 0,   duration: 0.8, ease: 'power2.out' }, 2.4);
+    tl.to(productName, { opacity: 0, duration: 0.2 }, 1.6);
+    tl.call(() => { productName.textContent = products[1]; }, [], 1.82);
+    tl.to(productName, { opacity: 1, duration: 0.4 }, 1.82);
 
     /* Sous-titre */
     tl.to(tagline, { opacity: 1, duration: 0.6 }, 1.8);
 
+    /* Panel 3 entre t=3.2s / Panel 2 sort simultanément */
+    tl.to(panels[2], { rotationY: 0, scale: 1, z: 0, opacity: 1, duration: 1.4, ease: 'power2.inOut' }, 3.2);
+    tl.to(pImgs[2],  { scale: 1.0, duration: 1.4, ease: 'power2.inOut' }, 3.2);
+    tl.to(panels[1], { opacity: 0, scale: 1.04, z: 80, duration: 1.0, ease: 'power2.in' }, 3.2);
+
     /* Nom produit 3 */
-    tl.to(productName, { opacity: 0, duration: 0.2 }, 2.4);
-    tl.call(() => { productName.textContent = products[2]; }, [], 2.62);
-    tl.to(productName, { opacity: 1, duration: 0.4 }, 2.62);
+    tl.to(productName, { opacity: 0, duration: 0.2 }, 3.2);
+    tl.call(() => { productName.textContent = products[2]; }, [], 3.42);
+    tl.to(productName, { opacity: 1, duration: 0.4 }, 3.42);
 
     /* Flèche */
     tl.to(arrow, { opacity: 1, duration: 0.4 }, 3.2);
     tl.to(arrow, { y: -6, duration: 0.8, repeat: -1, yoyo: true, ease: 'sine.inOut' }, 3.6);
+
+    /* Panel 3 en place (t=4.6s) — zoom lent infini + vignette */
+    tl.call(() => {
+      gsap.to(pImgs[2], { scale: 1.06, duration: 8, ease: 'none', repeat: -1, yoyo: true });
+    }, [], 4.6);
+    tl.to(vignette, { opacity: 0.3, duration: 1.2 }, 4.6);
   }
 
   /* Disparition au scroll / touch / click */
