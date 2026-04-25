@@ -198,74 +198,14 @@ function cartRefreshPanel() {
   });
 }
 
-/* ---------- Checkout — Stripe redirect ---------- */
-async function showCheckout() {
+/* ---------- Checkout — redirect vers la page intégrée ---------- */
+function showCheckout() {
   const items = cartGet();
-
-  console.log('[Volombe] showCheckout() appelé', items);
-
   if (!items || items.length === 0) {
     alert('Votre panier est vide. Ajoutez un produit avant de commander.');
     return;
   }
-
-  /* Cibler tous les boutons "Commander" visibles */
-  const btns = document.querySelectorAll('#btn-commander, .btn-commander, [onclick*="showCheckout"]');
-  btns.forEach(b => {
-    b._origText = b.textContent;
-    b.textContent = 'Redirection…';
-    b.disabled = true;
-  });
-
-  /* Supprimer l'éventuel message d'erreur précédent */
-  document.querySelectorAll('#checkout-error-msg').forEach(e => e.remove());
-
-  /* URL de l'API — local (next dev) ou production (Vercel) */
-  const apiBase = (window.location.protocol === 'file:')
-    ? 'http://localhost:3000'
-    : window.location.origin;
-
-  console.log('[Volombe] POST vers', `${apiBase}/api/checkout`);
-
-  try {
-    const res = await fetch(`${apiBase}/api/checkout`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(items),
-    });
-
-    console.log('[Volombe] Réponse API status:', res.status);
-
-    const data = await res.json();
-
-    console.log('[Volombe] Réponse API data:', data);
-
-    if (!res.ok || !data.url) {
-      throw new Error(data.error || `Erreur serveur (${res.status})`);
-    }
-
-    /* Succès — fermer le panier PUIS rediriger */
-    cartClose();
-    window.location.href = data.url;
-
-  } catch (err) {
-    console.error('[Volombe] Checkout error:', err);
-
-    /* Réactiver les boutons */
-    btns.forEach(b => {
-      b.textContent = b._origText || 'Commander';
-      b.disabled = false;
-    });
-
-    /* Message d'erreur visible dans le panier (qui reste ouvert) */
-    const cartFooter = document.getElementById('cart-footer');
-    const target = cartFooter || document.querySelector('.sticky__cta') || document.body;
-    const errMsg = document.createElement('p');
-    errMsg.id = 'checkout-error-msg';
-    errMsg.textContent = `⚠ Erreur : ${err.message}. Réessayez ou contactez-nous.`;
-    errMsg.style.cssText = 'margin-top:10px;font-size:.75rem;color:#e07b54;text-align:center;padding:8px;border:1px solid #e07b54;';
-    target.appendChild(errMsg);
-  }
+  window.location.href = '/checkout';
 }
 
 /* ---------- Wire cart icon on all pages ---------- */
