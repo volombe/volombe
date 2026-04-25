@@ -413,8 +413,8 @@
     <span class="sticky__price">80,00 €</span>
   </div>
   <div class="sticky__cta">
-    <button class="btn-atc" onclick="showCheckout()">
-      Commander
+    <button class="btn-atc" id="sticky-atc-btn">
+      Ajouter au panier
     </button>
   </div>
 </div>
@@ -573,6 +573,21 @@ window.addEventListener('scroll', () => {
   const show = window.scrollY > prodAnchor.offsetTop + 400;
   stickyBar.classList.toggle('on', show);
 }, { passive: true });
+
+document.getElementById('sticky-atc-btn').addEventListener('click', function() {
+  const sel = document.querySelector('.sz.sel');
+  if (!sel) { this.textContent = 'Choisir une taille'; setTimeout(() => { this.textContent = 'Ajouter au panier'; }, 1500); return; }
+  cartAdd({
+    id: 'sweatshirt',
+    name: 'Sweat-Shirt',
+    price: 80,
+    size: sel.dataset.size,
+    qty: parseInt(qtyVal.value),
+    img: 'images/3-face.png'
+  });
+  this.textContent = '✓ Ajouté';
+  setTimeout(() => { this.textContent = 'Ajouter au panier'; }, 2200);
+});
 
 /* ===== REVIEW BARS ===== */
 document.querySelectorAll('.bar-f').forEach(bar => {

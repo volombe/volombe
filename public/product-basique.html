@@ -478,8 +478,8 @@
     <span class="sticky__price">30,00 €</span>
   </div>
   <div class="sticky__cta">
-    <button class="btn-atc" onclick="showCheckout()">
-      Commander
+    <button class="btn-atc" id="sticky-atc-btn">
+      Ajouter au panier
     </button>
   </div>
 </div>
@@ -638,6 +638,22 @@ const stickyObs = new IntersectionObserver(entries => {
   sticky.classList.toggle('on', !entries[0].isIntersecting);
 }, { rootMargin: '-200px 0px 0px 0px' });
 stickyObs.observe(prodAnchor);
+
+document.getElementById('sticky-atc-btn').addEventListener('click', () => {
+  const sel = document.querySelector('.sz.sel');
+  if (!sel) { alert('Veuillez sélectionner une taille.'); return; }
+  cartAdd({
+    id: 'classic',
+    name: 'Le Classic',
+    price: 30,
+    size: sel.dataset.size,
+    qty: parseInt(qtyVal.value),
+    img: 'images/WhatsApp%20Image%202026-03-24%20at%2022.25.37%20(1).jpeg'
+  });
+  const btn = document.getElementById('sticky-atc-btn');
+  btn.textContent = '✓ Ajouté';
+  setTimeout(() => { btn.textContent = 'Ajouter au panier'; }, 2200);
+});
 
 /* ===== SCROLL REVEAL ===== */
 const revealEls = document.querySelectorAll('[data-reveal]');
