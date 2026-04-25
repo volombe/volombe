@@ -200,10 +200,19 @@ function CheckoutForm({ grandTotal }: { grandTotal: number }) {
   const stripe   = useStripe();
   const elements = useElements();
 
-  const [name,    setName]    = useState('');
-  const [email,   setEmail]   = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState('');
+  const [name,       setName]       = useState('');
+  const [email,      setEmail]      = useState('');
+  const [adresse,    setAdresse]    = useState('');
+  const [complement, setComplement] = useState('');
+  const [codePostal, setCodePostal] = useState('');
+  const [ville,      setVille]      = useState('');
+  const [pays,       setPays]       = useState('FR');
+  const [loading,    setLoading]    = useState(false);
+  const [error,      setError]      = useState('');
+
+  const paysISO: Record<string, string> = {
+    FR: 'France', BE: 'Belgique', CH: 'Suisse', LU: 'Luxembourg', CA: 'Canada',
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -216,8 +225,27 @@ function CheckoutForm({ grandTotal }: { grandTotal: number }) {
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/success`,
+        shipping: {
+          name,
+          address: {
+            line1:       adresse,
+            line2:       complement || undefined,
+            postal_code: codePostal,
+            city:        ville,
+            country:     pays,
+          },
+        },
         payment_method_data: {
-          billing_details: { name, email },
+          billing_details: {
+            name,
+            email,
+            address: {
+              line1:       adresse,
+              postal_code: codePostal,
+              city:        ville,
+              country:     pays,
+            },
+          },
         },
       },
     });
@@ -263,7 +291,98 @@ function CheckoutForm({ grandTotal }: { grandTotal: number }) {
         />
       </div>
 
-      <div style={{ marginTop: '8px' }}>
+      {/* ── Adresse de livraison ── */}
+      <div style={{ marginTop: '28px', marginBottom: '4px' }}>
+        <h3 style={{
+          fontFamily: '"Cormorant Garamond", Georgia, serif',
+          fontStyle: 'italic',
+          fontWeight: 300,
+          fontSize: '1.15rem',
+          color: '#f5f0e8',
+          letterSpacing: '0.02em',
+          marginBottom: '16px',
+        }}>
+          Adresse de livraison
+        </h3>
+
+        <div>
+          <label style={S.label}>Adresse</label>
+          <input
+            style={S.input}
+            type="text"
+            value={adresse}
+            onChange={e => setAdresse(e.target.value)}
+            placeholder="12 rue de la Paix"
+            required
+            autoComplete="address-line1"
+          />
+        </div>
+
+        <div>
+          <label style={S.label}>Complément <span style={{ opacity: 0.4 }}>(optionnel)</span></label>
+          <input
+            style={S.input}
+            type="text"
+            value={complement}
+            onChange={e => setComplement(e.target.value)}
+            placeholder="Appartement, bâtiment..."
+            autoComplete="address-line2"
+          />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '12px' }}>
+          <div>
+            <label style={S.label}>Code postal</label>
+            <input
+              style={S.input}
+              type="text"
+              value={codePostal}
+              onChange={e => setCodePostal(e.target.value)}
+              placeholder="75001"
+              required
+              maxLength={10}
+              autoComplete="postal-code"
+            />
+          </div>
+          <div>
+            <label style={S.label}>Ville</label>
+            <input
+              style={S.input}
+              type="text"
+              value={ville}
+              onChange={e => setVille(e.target.value)}
+              placeholder="Paris"
+              required
+              autoComplete="address-level2"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label style={S.label}>Pays</label>
+          <select
+            style={{
+              ...S.input,
+              appearance: 'none' as const,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b8996a' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E")`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right 14px center',
+              paddingRight: '36px',
+              cursor: 'pointer',
+            }}
+            value={pays}
+            onChange={e => setPays(e.target.value)}
+          >
+            <option value="FR">France</option>
+            <option value="BE">Belgique</option>
+            <option value="CH">Suisse</option>
+            <option value="LU">Luxembourg</option>
+            <option value="CA">Canada</option>
+          </select>
+        </div>
+      </div>
+
+      <div style={{ marginTop: '24px' }}>
         <PaymentElement options={{ layout: 'tabs' }} />
       </div>
 
