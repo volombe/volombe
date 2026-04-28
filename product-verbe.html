@@ -461,18 +461,18 @@ mainImg.style.willChange = 'transform';
 function applySweatStyle(idx) {
   mainImg.classList.remove('zoomed');
   if (idx === 0) {
-    // Sweat face : fond noir, contain centré
+    // Sweat face : cadrage serré par défaut, clic pour voir l'entier
     galleryMain.style.background  = '#000';
-    mainImg.style.objectFit       = 'contain';
-    mainImg.style.objectPosition  = 'center';
+    mainImg.style.objectFit       = 'cover';
+    mainImg.style.objectPosition  = 'center center';
     mainImg.style.mixBlendMode    = '';
     mainImg.style.filter          = '';
-    mainImg.style.padding         = '8px';
+    mainImg.style.padding         = '0';
     mainImg.style.width           = '100%';
     mainImg.style.maxHeight       = '100%';
-    mainImg.style.transform       = '';
+    mainImg.style.transform       = 'scale(1.15)';
     mainImg.style.transition      = 'transform 0.3s ease';
-    mainImg.style.cursor          = 'zoom-in';
+    mainImg.style.cursor          = 'zoom-out';
   } else {
     // Étiquette : fond noir, contain centré
     galleryMain.style.background  = '#000';
@@ -508,8 +508,19 @@ mainImg.addEventListener('click', () => {
   const activeIdx = thumbBtns.findIndex(t => t.classList.contains('active'));
   if (activeIdx !== 0) return;
   const isZoomed = mainImg.classList.toggle('zoomed');
-  mainImg.style.transform = isZoomed ? 'scale(1.3)' : '';
-  mainImg.style.cursor    = isZoomed ? 'zoom-out' : 'zoom-in';
+  if (isZoomed) {
+    // Dézoom : sweat entier visible
+    mainImg.style.objectFit = 'contain';
+    mainImg.style.transform = 'scale(1)';
+    mainImg.style.padding   = '8px';
+    mainImg.style.cursor    = 'zoom-in';
+  } else {
+    // Retour au cadrage serré par défaut
+    mainImg.style.objectFit = 'cover';
+    mainImg.style.transform = 'scale(1.15)';
+    mainImg.style.padding   = '0';
+    mainImg.style.cursor    = 'zoom-out';
+  }
 });
 
 /* Style initial — miniature 0 active au chargement */

@@ -497,13 +497,13 @@ mainImg.style.willChange = 'transform';
 function applyImgStyle(idx) {
   mainImg.classList.remove('zoomed');
   if (idx === 1) {
-    // Dos imprimé : fond noir, t-shirt entier visible
+    // Dos imprimé : cadrage serré par défaut, clic pour voir l'entier
     galleryMain.style.background  = '#000';
-    mainImg.style.objectFit       = 'contain';
+    mainImg.style.objectFit       = 'cover';
     mainImg.style.objectPosition  = 'center';
-    mainImg.style.transform       = 'scale(1)';
-    mainImg.style.padding         = '16px';
-    mainImg.style.cursor          = 'zoom-in';
+    mainImg.style.transform       = 'scale(1.4)';
+    mainImg.style.padding         = '0';
+    mainImg.style.cursor          = 'zoom-out';
   } else {
     // Face et broderie : fond par défaut, zoom CSS
     galleryMain.style.background  = '';
@@ -531,15 +531,17 @@ mainImg.addEventListener('click', () => {
   if (activeIdx !== 1) return;
   const isZoomed = mainImg.classList.toggle('zoomed');
   if (isZoomed) {
-    mainImg.style.objectFit = 'cover';
-    mainImg.style.transform = 'scale(1.4)';
-    mainImg.style.cursor    = 'zoom-out';
-    mainImg.style.padding   = '0';
-  } else {
+    // Dézoom : t-shirt entier visible
     mainImg.style.objectFit = 'contain';
     mainImg.style.transform = 'scale(1)';
     mainImg.style.cursor    = 'zoom-in';
     mainImg.style.padding   = '16px';
+  } else {
+    // Retour au cadrage serré par défaut
+    mainImg.style.objectFit = 'cover';
+    mainImg.style.transform = 'scale(1.4)';
+    mainImg.style.cursor    = 'zoom-out';
+    mainImg.style.padding   = '0';
   }
 });
 
