@@ -472,7 +472,7 @@ function applySweatStyle(idx) {
     mainImg.style.maxHeight       = '100%';
     mainImg.style.transform       = 'scale(1.15)';
     mainImg.style.transition      = 'transform 0.3s ease';
-    mainImg.style.cursor          = 'zoom-out';
+    mainImg.style.cursor          = 'zoom-in';
   } else {
     // Étiquette : fond noir, contain centré
     galleryMain.style.background  = '#000';
@@ -509,17 +509,11 @@ mainImg.addEventListener('click', () => {
   if (activeIdx !== 0) return;
   const isZoomed = mainImg.classList.toggle('zoomed');
   if (isZoomed) {
-    // Dézoom : sweat entier visible
-    mainImg.style.objectFit = 'contain';
-    mainImg.style.transform = 'scale(1)';
-    mainImg.style.padding   = '8px';
-    mainImg.style.cursor    = 'zoom-in';
-  } else {
-    // Retour au cadrage serré par défaut
-    mainImg.style.objectFit = 'cover';
-    mainImg.style.transform = 'scale(1.15)';
-    mainImg.style.padding   = '0';
+    mainImg.style.transform = 'scale(1.35)';
     mainImg.style.cursor    = 'zoom-out';
+  } else {
+    mainImg.style.transform = 'scale(1.15)';
+    mainImg.style.cursor    = 'zoom-in';
   }
 });
 
