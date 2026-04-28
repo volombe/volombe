@@ -456,14 +456,17 @@ const mainImg    = document.getElementById('gallery-main-img');
 const galleryMain = document.getElementById('gallery-main');
 const thumbBtns  = Array.from(document.querySelectorAll('.gallery__thumb'));
 
+mainImg.style.willChange = 'transform';
+
 function applySweatStyle(idx) {
   mainImg.classList.remove('zoomed');
   if (idx === 0) {
-    galleryMain.style.background  = '#ffffff';
+    // Sweat face : fond noir, contain centré
+    galleryMain.style.background  = '#000';
     mainImg.style.objectFit       = 'contain';
     mainImg.style.objectPosition  = 'center';
-    mainImg.style.mixBlendMode    = 'multiply';
-    mainImg.style.filter          = 'brightness(1.6) contrast(1.2)';
+    mainImg.style.mixBlendMode    = '';
+    mainImg.style.filter          = '';
     mainImg.style.padding         = '8px';
     mainImg.style.width           = '100%';
     mainImg.style.maxHeight       = '100%';
@@ -471,14 +474,15 @@ function applySweatStyle(idx) {
     mainImg.style.transition      = 'transform 0.3s ease';
     mainImg.style.cursor          = 'zoom-in';
   } else {
-    galleryMain.style.background  = '';
-    mainImg.style.objectFit       = '';
-    mainImg.style.objectPosition  = '';
+    // Étiquette : fond noir, contain centré
+    galleryMain.style.background  = '#000';
+    mainImg.style.objectFit       = 'contain';
+    mainImg.style.objectPosition  = 'center center';
     mainImg.style.mixBlendMode    = '';
     mainImg.style.filter          = '';
-    mainImg.style.padding         = '';
-    mainImg.style.width           = '';
-    mainImg.style.maxHeight       = '';
+    mainImg.style.padding         = '8px';
+    mainImg.style.width           = '100%';
+    mainImg.style.maxHeight       = '100%';
     mainImg.style.transform       = '';
     mainImg.style.transition      = '';
     mainImg.style.cursor          = '';

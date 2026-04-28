@@ -80,9 +80,6 @@
       <button class="gallery__thumb" data-src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37%20(2).jpeg" data-alt="Dos uni">
         <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37%20(2).jpeg" alt="Dos uni" />
       </button>
-      <button class="gallery__thumb" data-src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37.jpeg" data-alt="Détail broderie croix">
-        <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37.jpeg" alt="Croix brodée" />
-      </button>
     </div>
   </div>
 
@@ -517,23 +514,26 @@ mobMenu.querySelectorAll('.mob-link').forEach(l => {
 });
 
 /* ===== GALLERY ===== */
-const mainImg = document.getElementById('gallery-main-img');
-const thumbBtns = Array.from(document.querySelectorAll('.gallery__thumb'));
+const mainImg     = document.getElementById('gallery-main-img');
+const galleryMain = document.getElementById('gallery-main');
+const thumbBtns   = Array.from(document.querySelectorAll('.gallery__thumb'));
+
+mainImg.style.willChange = 'transform';
 
 function applyClassicStyle(idx) {
-  if (idx === 0 || idx === 1) {
-    // Face et dos : agrandir pour remplir l'espace blanc
-    mainImg.style.transform       = 'scale(1.45)';
-    mainImg.style.transformOrigin = 'center center';
-    mainImg.style.objectFit       = 'contain';
-    mainImg.style.objectPosition  = 'center center';
-    mainImg.style.padding         = '0';
-    mainImg.style.margin          = '0';
+  galleryMain.style.background = '#fff';
+  mainImg.style.transform      = 'scale(1)';
+  mainImg.style.margin         = '0';
+  if (idx === 0) {
+    // Face : remplir le cadre, cadré en haut
+    mainImg.style.objectFit      = 'cover';
+    mainImg.style.objectPosition = 'center top';
+    mainImg.style.padding        = '0';
   } else {
-    // Broderie : affichage normal centré
-    mainImg.style.transform    = 'scale(1)';
-    mainImg.style.objectFit    = 'contain';
-    mainImg.style.padding      = '8px';
+    // Dos uni : t-shirt entier centré
+    mainImg.style.objectFit      = 'contain';
+    mainImg.style.objectPosition = 'center center';
+    mainImg.style.padding        = '8px';
   }
 }
 
@@ -547,7 +547,6 @@ thumbBtns.forEach((thumb, idx) => {
   });
 });
 
-// Appliquer le style de la miniature active au chargement (thumb 0)
 applyClassicStyle(0);
 
 /* ===== SIZE PICKER ===== */
