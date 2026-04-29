@@ -1321,15 +1321,13 @@ ul { list-style: none; }
 .gallery { position: sticky; top: 84px; }
 .gallery__main {
   overflow: hidden;
+  width: 100%;
   height: auto;
-  min-height: 420px;
-  max-height: 700px;
   background: #0a0a0a;
   margin-bottom: 6px;
   cursor: zoom-in;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  transition: aspect-ratio 0.3s ease;
 }
 .gallery__main img {
   width: 100%;
