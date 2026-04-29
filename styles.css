@@ -1321,8 +1321,10 @@ ul { list-style: none; }
 .gallery { position: sticky; top: 84px; }
 .gallery__main {
   overflow: hidden;
-  height: 480px;
-  background: #fff;
+  height: auto;
+  min-height: 420px;
+  max-height: 700px;
+  background: #0a0a0a;
   margin-bottom: 6px;
   cursor: zoom-in;
   display: flex;
@@ -2061,7 +2063,9 @@ ul { list-style: none; }
     height: 64px;
   }
   .gallery__main {
-    height: 380px;
+    min-height: 320px;
+    height: auto;
+    max-height: 600px;
   }
   .gallery__main img {
     object-fit: contain;

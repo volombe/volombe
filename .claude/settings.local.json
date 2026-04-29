@@ -3,7 +3,11 @@
     "allow": [
       "WebFetch(domain:volombe.fr)",
       "Bash(grep -v \"^c:/Users/33787/Desktop/Volombe$\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(py --version)",
+      "Bash(git add *)"
     ]
   }
 }

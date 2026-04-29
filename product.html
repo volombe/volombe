@@ -159,9 +159,9 @@
         </button>
         <div class="acc__body open">
           <div class="acc__inner">
-            <p style="margin-bottom:16px">L'Apocalypse est la pièce fondatrice de Volombe. Un t-shirt oversize pensé pour ceux qui n'ont pas peur de porter leur foi au grand jour.</p>
-            <p style="margin-bottom:16px">Au cœur, une broderie croix réalisée à la main — précise, sobre, essentielle. Au dos, la gravure emblématique de Gustave Doré tirée de l'Apocalypse 20:11–15. Une œuvre du XIXe siècle imprimée haute-définition sur coton lourd.</p>
-            <p>L'étiquette intérieure porte Romains 12:2. Un rappel intime que personne ne voit — sauf vous.</p>
+            <p style="margin-bottom:16px">Apocalypse est la pièce fondatrice de Volombe. Un t-shirt oversize pensé pour ceux qui n'ont pas peur de porter leur foi au grand jour.</p>
+            <p style="margin-bottom:16px">Au cœur, une broderie croix réalisée à la main — précise, sobre, essentielle. Au dos, la gravure emblématique de Gustave Doré, tirée de l'Apocalypse 20:11–15.</p>
+            <p>Une œuvre du XIXe siècle, imprimée en haute définition sur coton lourd.</p>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@
             <p style="margin-bottom:12px"><strong style="color:rgba(245,240,232,.7)">Livraison standard :</strong> 3–5 jours ouvrés · 4,90 €</p>
             <p style="margin-bottom:12px"><strong style="color:rgba(245,240,232,.7)">Livraison express :</strong> 1–2 jours ouvrés · 9,90 €</p>
             <p style="margin-bottom:12px"><strong style="color:rgba(245,240,232,.7)">Livraison offerte :</strong> dès 80 € d'achat</p>
-            <p>Les retours sont acceptés dans les 14 jours suivant la réception, pour tout article non porté et dans son emballage d'origine. Contactez-nous à contact@volombe.com.</p>
+            <p>Les retours sont acceptés dans les 14 jours suivant la réception, pour tout article non porté et dans son emballage d'origine. Contactez-nous à sav.contact@volombe.fr.</p>
           </div>
         </div>
       </div>
@@ -257,18 +257,18 @@
   </div>
 </div>
 
-<!-- ===== CROSS-SELL — Le Classic ===== -->
+<!-- ===== CROSS-SELL — Le Fondement ===== -->
 <div class="cross-sell">
   <div class="cross-sell__img">
     <img
       src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37%20(1).jpeg"
-      alt="T-shirt Le Classic"
+      alt="T-shirt Le Fondement"
       loading="lazy"
     />
   </div>
   <div class="cross-sell__info">
     <p class="cross-sell__eyebrow" data-reveal>Vous aimerez aussi</p>
-    <h2 class="cross-sell__title" data-reveal="1">Le Classic</h2>
+    <h2 class="cross-sell__title" data-reveal="1">Le Fondement</h2>
     <p class="cross-sell__sub" data-reveal="2">T-shirt oversize · Broderie croix seule · Sans impression dos</p>
     <p class="cross-sell__price" data-reveal="3">30,00 €</p>
     <a href="product-basique.html" class="btn btn--gold" data-reveal="4">Découvrir →</a>
@@ -301,7 +301,7 @@
       </div>
       <div class="faq-card" data-reveal="4">
         <p class="faq-q">Puis-je retourner ma commande ?</p>
-        <p class="faq-a">Oui, sous 14 jours après réception, pour tout article non porté dans son emballage d'origine. Contactez-nous à contact@volombe.com.</p>
+        <p class="faq-a">Oui, sous 14 jours après réception, pour tout article non porté dans son emballage d'origine. Contactez-nous à sav.contact@volombe.fr.</p>
       </div>
       <div class="faq-card" data-reveal="5">
         <p class="faq-q">Quelle est la signification de la gravure au dos ?</p>
@@ -411,8 +411,8 @@
         <p class="footer__col-h">Collection</p>
         <ul class="footer__list">
           <li><a href="product.html" class="footer__link">Apocalypse 20:11-15</a></li>
-          <li><a href="product-basique.html" class="footer__link">Le Classic</a></li>
-          <li><a href="index.html#sweat" class="footer__link">Sweat-Shirt</a></li>
+          <li><a href="product-basique.html" class="footer__link">Le Fondement</a></li>
+          <li><a href="index.html#sweat" class="footer__link">Conviction</a></li>
         </ul>
       </div>
       <div>
@@ -427,7 +427,7 @@
         <p class="footer__col-h">Contact</p>
         <ul class="footer__list">
           <li><a href="index.html#contact" class="footer__link">Newsletter</a></li>
-          <li><a href="mailto:contact@volombe.com" class="footer__link">contact@volombe.com</a></li>
+          <li><a href="mailto:sav.contact@volombe.fr" class="footer__link">sav.contact@volombe.fr</a></li>
         </ul>
       </div>
     </div>
@@ -496,24 +496,13 @@ mainImg.style.willChange = 'transform';
 
 function applyImgStyle(idx) {
   mainImg.classList.remove('zoomed');
-  if (idx === 1) {
-    // Dos imprimé : cadrage serré par défaut, clic pour voir l'entier
-    galleryMain.style.background  = '#000';
-    mainImg.style.objectFit       = 'cover';
-    mainImg.style.objectPosition  = 'center';
-    mainImg.style.transform       = 'scale(1.4)';
-    mainImg.style.transition      = 'transform 0.3s ease';
-    mainImg.style.padding         = '0';
-    mainImg.style.cursor          = 'zoom-in';
-  } else {
-    // Face et broderie : fond par défaut, zoom CSS
-    galleryMain.style.background  = '';
-    mainImg.style.objectFit       = '';
-    mainImg.style.objectPosition  = '';
-    mainImg.style.transform       = '';
-    mainImg.style.padding         = '';
-    mainImg.style.cursor          = '';
-  }
+  galleryMain.style.background  = '#0a0a0a';
+  mainImg.style.objectFit       = 'contain';
+  mainImg.style.objectPosition  = 'center center';
+  mainImg.style.transform       = 'scale(1)';
+  mainImg.style.padding         = '16px';
+  mainImg.style.transition      = 'transform 0.3s ease';
+  mainImg.style.cursor          = idx <= 1 ? 'zoom-in' : 'default';
 }
 
 thumbBtns.forEach((thumb, idx) => {
@@ -526,19 +515,16 @@ thumbBtns.forEach((thumb, idx) => {
   });
 });
 
-// Toggle zoom au clic — dos imprimé uniquement
+// Zoom +0.2 au clic — index 0 et 1 uniquement
 mainImg.addEventListener('click', () => {
   const activeIdx = thumbBtns.findIndex(t => t.classList.contains('active'));
-  if (activeIdx !== 1) return;
+  if (activeIdx > 1) return;
   const isZoomed = mainImg.classList.toggle('zoomed');
-  if (isZoomed) {
-    mainImg.style.transform = 'scale(1.6)';
-    mainImg.style.cursor    = 'zoom-out';
-  } else {
-    mainImg.style.transform = 'scale(1.4)';
-    mainImg.style.cursor    = 'zoom-in';
-  }
+  mainImg.style.transform = isZoomed ? 'scale(1.2)' : 'scale(1)';
+  mainImg.style.cursor    = isZoomed ? 'zoom-out' : 'zoom-in';
 });
+
+applyImgStyle(0);
 
 /* ===== SIZE PICKER ===== */
 document.getElementById('size-picker').addEventListener('click', e => {
@@ -674,5 +660,33 @@ const rvSummary = document.querySelector('.rv-summary');
 if (rvSummary) barObs.observe(rvSummary);
 </script>
 <script src="cart.js"></script>
+
+<!-- ===== SEARCH OVERLAY ===== -->
+<div id="search-overlay" aria-hidden="true" role="dialog" aria-label="Recherche">
+  <button id="search-close" aria-label="Fermer">&#x2715;</button>
+  <input id="search-input" type="text" placeholder="Rechercher..." autocomplete="off" spellcheck="false" />
+</div>
+<style>
+#search-overlay{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+#search-overlay.open{opacity:1;pointer-events:all;}
+#search-input{background:transparent;border:none;border-bottom:.5px solid #b8996a;color:#f5f0e8;font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:2rem;width:80vw;max-width:500px;outline:none;padding:8px 0;}
+#search-input::placeholder{color:rgba(245,240,232,.3);}
+#search-close{position:absolute;top:24px;right:28px;background:none;border:none;color:rgba(245,240,232,.45);font-size:1.1rem;cursor:pointer;}
+#search-close:hover{color:#f5f0e8;}
+</style>
+<script>
+(function(){
+  var ov=document.getElementById('search-overlay'),ip=document.getElementById('search-input'),cl=document.getElementById('search-close');
+  function openS(){ov.classList.add('open');ov.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(function(){ip.focus();},50);}
+  function closeS(){ov.classList.remove('open');ov.setAttribute('aria-hidden','true');document.body.style.overflow='';ip.value='';}
+  document.querySelectorAll('[aria-label="Rechercher"]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();openS();});});
+  cl.addEventListener('click',closeS);
+  ov.addEventListener('click',function(e){if(e.target===ov)closeS();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeS();});
+  ip.addEventListener('keydown',function(e){if(e.key==='Enter'){var q=ip.value.trim();if(q)window.location.href='collection.html?q='+encodeURIComponent(q);}});
+})();
+</script>
+
+</body>button>  <input id="search-input" type="text" placeholder="Rechercher..." autocomplete="off" spellcheck="false" </body>><</body>div><style>#search-overlay {  position: fixed; inset: 0; z-index: 8000;  background: rgba(0,0,0,0.95);  display: flex; align-items: center; justify-content: center;  opacity: 0; pointer-events: none;  transition: opacity 0.25s ease;}#search-overlay.open { opacity: 1; pointer-events: all; }#search-input {  background: transparent; border: none;  border-bottom: 0.5px solid #b8996a;  color: #f5f0e8;  font-family: 'Cormorant Garamond', Georgia, serif;  font-weight: 300; font-size: 2rem;  width: 80vw; max-width: 500px;  outline: none; padding: 8px 0;}#search-input::placeholder { color: rgba(245,240,232,0.3); }#search-close {  position: absolute; top: 24px; right: 28px;  background: none; border: none;  color: rgba(245,240,232,0.45);  font-size: 1.1rem; cursor: pointer;  transition: color 0.2s;}#search-close:hover { color: #f5f0e8; }<</body>style><script>(function() {  var overlay = document.getElementById('search-overlay');  var input   = document.getElementById('search-input');  var closeBtn= document.getElementById('search-close');  function openSearch() {    overlay.classList.add('open');    overlay.setAttribute('aria-hidden', 'false');    document.body.style.overflow = 'hidden';    setTimeout(function(){ input.focus(); }, 50);  }  function closeSearch() {    overlay.classList.remove('open');    overlay.setAttribute('aria-hidden', 'true');    document.body.style.overflow = '';    input.value = '';  }  document.querySelectorAll('[aria-label="Rechercher"]').forEach(function(btn) {    btn.addEventListener('click', function(e) { e.preventDefault(); openSearch(); });  });  closeBtn.addEventListener('click', closeSearch);  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSearch(); });  input.addEventListener('keydown', function(e) {    if (e.key === 'Enter') {      var q = input.value.trim();      if (q) window.location.href = 'collection.html?q=' + encodeURIComponent(q);    }  });})();<</body>script>
 </body>
 </html>

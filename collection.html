@@ -230,7 +230,7 @@
       </div>
       <div class="col-card__meta">
         <div>
-          <p class="col-card__sub">T-shirt · Oversize · Dos imprimé</p>
+          <p class="col-card__sub">Gravure Gustave Doré au dos. Broderie croix artisanale.</p>
           <p class="col-card__name">Apocalypse 20:11-15</p>
         </div>
         <span class="col-card__price">40 €</span>
@@ -238,37 +238,37 @@
     </a>
   </article>
 
-  <!-- Le Classic -->
+  <!-- Le Fondement -->
   <article class="col-card">
     <a href="product-basique.html">
       <div class="col-card__img-wrap">
         <img src="images/WhatsApp%20Image%202026-04-28%20at%2017.32.26.jpeg"
-             alt="Le Classic — T-shirt oversize" class="col-card__img" />
+             alt="Le Fondement — T-shirt oversize" class="col-card__img" />
         <div class="col-card__overlay"><span class="col-card__cta">Voir le produit</span></div>
       </div>
       <div class="col-card__meta">
         <div>
-          <p class="col-card__sub">T-shirt · Oversize · Broderie seule</p>
-          <p class="col-card__name">Le Classic</p>
+          <p class="col-card__sub">L'essentiel Volombe. Broderie croix au cœur.</p>
+          <p class="col-card__name">Le Fondement</p>
         </div>
         <span class="col-card__price">30 €</span>
       </div>
     </a>
   </article>
 
-  <!-- Sweat-Shirt -->
+  <!-- Conviction -->
   <article class="col-card">
     <a href="product-verbe.html">
       <div class="col-card__img-wrap">
         <img src="images/WhatsApp%20Image%202026-04-27%20at%2021.26.12.jpeg"
-             alt="Sweat-Shirt — Sweat-shirt oversize" class="col-card__img" />
+             alt="Conviction — Sweat-shirt oversize" class="col-card__img" />
         <span class="col-card__badge">Nouveau</span>
         <div class="col-card__overlay"><span class="col-card__cta">Voir le produit</span></div>
       </div>
       <div class="col-card__meta">
         <div>
-          <p class="col-card__sub">Sweat-shirt · Oversize · Broderie</p>
-          <p class="col-card__name">Sweat-Shirt</p>
+          <p class="col-card__sub">Un hoodie oversize à capuche. Broderie croix artisanale.</p>
+          <p class="col-card__name">Conviction</p>
         </div>
         <span class="col-card__price">80 €</span>
       </div>
@@ -369,8 +369,8 @@
         <p class="footer__col-h">Collection</p>
         <ul class="footer__list">
           <li><a href="product.html" class="footer__link">Apocalypse 20:11-15</a></li>
-          <li><a href="product-basique.html" class="footer__link">Le Classic</a></li>
-          <li><a href="product-verbe.html" class="footer__link">Sweat-Shirt</a></li>
+          <li><a href="product-basique.html" class="footer__link">Le Fondement</a></li>
+          <li><a href="product-verbe.html" class="footer__link">Conviction</a></li>
         </ul>
       </div>
       <div>
@@ -385,7 +385,7 @@
         <p class="footer__col-h">Contact</p>
         <ul class="footer__list">
           <li><a href="index.html#contact" class="footer__link">Newsletter</a></li>
-          <li><a href="mailto:contact@volombe.com" class="footer__link">contact@volombe.com</a></li>
+          <li><a href="mailto:sav.contact@volombe.fr" class="footer__link">sav.contact@volombe.fr</a></li>
         </ul>
       </div>
     </div>
@@ -434,5 +434,54 @@ const io = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
 </script>
 <script src="cart.js"></script>
+
+<!-- ===== SEARCH OVERLAY ===== -->
+<div id="search-overlay" aria-hidden="true" role="dialog" aria-label="Recherche">
+  <button id="search-close" aria-label="Fermer">&#x2715;</button>
+  <input id="search-input" type="text" placeholder="Rechercher..." autocomplete="off" spellcheck="false" />
+</div>
+<style>
+#search-overlay{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s ease;}
+#search-overlay.open{opacity:1;pointer-events:all;}
+#search-input{background:transparent;border:none;border-bottom:.5px solid #b8996a;color:#f5f0e8;font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;font-size:2rem;width:80vw;max-width:500px;outline:none;padding:8px 0;}
+#search-input::placeholder{color:rgba(245,240,232,.3);}
+#search-close{position:absolute;top:24px;right:28px;background:none;border:none;color:rgba(245,240,232,.45);font-size:1.1rem;cursor:pointer;}
+#search-close:hover{color:#f5f0e8;}
+</style>
+<script>
+(function(){
+  var ov=document.getElementById('search-overlay'),ip=document.getElementById('search-input'),cl=document.getElementById('search-close');
+  function openS(){ov.classList.add('open');ov.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';setTimeout(function(){ip.focus();},50);}
+  function closeS(){ov.classList.remove('open');ov.setAttribute('aria-hidden','true');document.body.style.overflow='';ip.value='';}
+  document.querySelectorAll('[aria-label="Rechercher"]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();openS();});});
+  cl.addEventListener('click',closeS);
+  ov.addEventListener('click',function(e){if(e.target===ov)closeS();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeS();});
+  ip.addEventListener('keydown',function(e){if(e.key==='Enter'){var q=ip.value.trim();if(q)window.location.href='collection.html?q='+encodeURIComponent(q);}});
+})();
+</script>
+
+<script>
+(function(){
+  var p=new URLSearchParams(window.location.search),q=p.get('q');
+  if(!q)return;
+  var t=q.toLowerCase(),cards=document.querySelectorAll('.col-card'),grid=document.querySelector('.col-grid');
+  var n=0;
+  cards.forEach(function(c){
+    var name=(c.querySelector('.col-card__name')||{textContent:''}).textContent.toLowerCase();
+    var sub=(c.querySelector('.col-card__sub')||{textContent:''}).textContent.toLowerCase();
+    var ok=name.includes(t)||sub.includes(t);
+    c.style.display=ok?'':'none';
+    if(ok)n++;
+  });
+  var info=document.createElement('div');
+  info.id='search-result-info';
+  info.style.cssText='padding:16px 24px;font-family:Inter,sans-serif;font-size:.75rem;letter-spacing:.08em;color:rgba(245,240,232,.6);border-bottom:1px solid rgba(245,240,232,.1);';
+  info.innerHTML=(n>0?n+' résultat'+(n>1?'s':'')+' pour «&nbsp;'+q+'&nbsp;»':'Aucun produit trouvé pour «&nbsp;'+q+'&nbsp;»')+' &nbsp;<a href="collection.html" style="color:#b8996a;text-decoration:none;">Voir toute la collection &rarr;</a>';
+  if(grid&&grid.parentNode)grid.parentNode.insertBefore(info,grid);
+})();
+</script>
+
+</body>button>  <input id="search-input" type="text" placeholder="Rechercher..." autocomplete="off" spellcheck="false" </body>><</body>div><style>#search-overlay {  position: fixed; inset: 0; z-index: 8000;  background: rgba(0,0,0,0.95);  display: flex; align-items: center; justify-content: center;  opacity: 0; pointer-events: none;  transition: opacity 0.25s ease;}#search-overlay.open { opacity: 1; pointer-events: all; }#search-input {  background: transparent; border: none;  border-bottom: 0.5px solid #b8996a;  color: #f5f0e8;  font-family: 'Cormorant Garamond', Georgia, serif;  font-weight: 300; font-size: 2rem;  width: 80vw; max-width: 500px;  outline: none; padding: 8px 0;}#search-input::placeholder { color: rgba(245,240,232,0.3); }#search-close {  position: absolute; top: 24px; right: 28px;  background: none; border: none;  color: rgba(245,240,232,0.45);  font-size: 1.1rem; cursor: pointer;  transition: color 0.2s;}#search-close:hover { color: #f5f0e8; }<</body>style><script>(function() {  var overlay = document.getElementById('search-overlay');  var input   = document.getElementById('search-input');  var closeBtn= document.getElementById('search-close');  function openSearch() {    overlay.classList.add('open');    overlay.setAttribute('aria-hidden', 'false');    document.body.style.overflow = 'hidden';    setTimeout(function(){ input.focus(); }, 50);  }  function closeSearch() {    overlay.classList.remove('open');    overlay.setAttribute('aria-hidden', 'true');    document.body.style.overflow = '';    input.value = '';  }  document.querySelectorAll('[aria-label="Rechercher"]').forEach(function(btn) {    btn.addEventListener('click', function(e) { e.preventDefault(); openSearch(); });  });  closeBtn.addEventListener('click', closeSearch);  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSearch(); });  input.addEventListener('keydown', function(e) {    if (e.key === 'Enter') {      var q = input.value.trim();      if (q) window.location.href = 'collection.html?q=' + encodeURIComponent(q);    }  });})();<</body>script>
 </body>
 </html>
