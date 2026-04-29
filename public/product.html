@@ -720,6 +720,45 @@ if (rvSummary) barObs.observe(rvSummary);
 })();
 </script>
 
+<!-- STOCK -->
+<script>
+(function() {
+  var PRODUIT = 'apocalypse';
+  fetch('/api/stock?produit=' + PRODUIT)
+    .then(function(r) { return r.json(); })
+    .then(function(stock) {
+      if (!stock || stock.error) return;
+      var btns = document.querySelectorAll('.sz:not([disabled])');
+      var totalStock = 0;
+      btns.forEach(function(btn) {
+        var taille = (btn.dataset.size || btn.textContent).trim().toLowerCase();
+        var qty = stock[taille];
+        if (qty === 0) {
+          btn.classList.add('oos');
+          btn.disabled = true;
+          btn.style.opacity = '0.3';
+          btn.style.textDecoration = 'line-through';
+          btn.style.pointerEvents = 'none';
+        } else {
+          totalStock += qty;
+        }
+      });
+      if (totalStock === 0) {
+        var atcBtn = document.getElementById('atc-btn');
+        var stickyBtn = document.getElementById('sticky-atc-btn');
+        [atcBtn, stickyBtn].forEach(function(b) {
+          if (!b) return;
+          b.textContent = 'Rupture de stock';
+          b.disabled = true;
+          b.style.opacity = '0.5';
+          b.style.cursor = 'not-allowed';
+        });
+      }
+    })
+    .catch(function() {});
+})();
+</script>
+
 </body>button>  <input id="search-input" type="text" placeholder="Rechercher..." autocomplete="off" spellcheck="false" </body>><</body>div><style>#search-overlay {  position: fixed; inset: 0; z-index: 8000;  background: rgba(0,0,0,0.95);  display: flex; align-items: center; justify-content: center;  opacity: 0; pointer-events: none;  transition: opacity 0.25s ease;}#search-overlay.open { opacity: 1; pointer-events: all; }#search-input {  background: transparent; border: none;  border-bottom: 0.5px solid #b8996a;  color: #f5f0e8;  font-family: 'Cormorant Garamond', Georgia, serif;  font-weight: 300; font-size: 2rem;  width: 80vw; max-width: 500px;  outline: none; padding: 8px 0;}#search-input::placeholder { color: rgba(245,240,232,0.3); }#search-close {  position: absolute; top: 24px; right: 28px;  background: none; border: none;  color: rgba(245,240,232,0.45);  font-size: 1.1rem; cursor: pointer;  transition: color 0.2s;}#search-close:hover { color: #f5f0e8; }<</body>style><script>(function() {  var overlay = document.getElementById('search-overlay');  var input   = document.getElementById('search-input');  var closeBtn= document.getElementById('search-close');  function openSearch() {    overlay.classList.add('open');    overlay.setAttribute('aria-hidden', 'false');    document.body.style.overflow = 'hidden';    setTimeout(function(){ input.focus(); }, 50);  }  function closeSearch() {    overlay.classList.remove('open');    overlay.setAttribute('aria-hidden', 'true');    document.body.style.overflow = '';    input.value = '';  }  document.querySelectorAll('[aria-label="Rechercher"]').forEach(function(btn) {    btn.addEventListener('click', function(e) { e.preventDefault(); openSearch(); });  });  closeBtn.addEventListener('click', closeSearch);  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSearch(); });  input.addEventListener('keydown', function(e) {    if (e.key === 'Enter') {      var q = input.value.trim();      if (q) window.location.href = 'collection.html?q=' + encodeURIComponent(q);    }  });})();<</body>script>
 </body>
 </html>
