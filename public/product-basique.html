@@ -239,7 +239,7 @@
     <span class="lb-label">Dos uni</span>
   </div>
   <div class="lb-cell">
-    <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37.jpeg" alt="Broderie croix" loading="lazy" />
+    <img src="images/WhatsApp%20Image%202026-03-24%20at%2022.25.37.jpeg" alt="Broderie croix" loading="lazy" style="object-fit: cover; object-position: center 35%;" />
     <span class="lb-label">Broderie</span>
   </div>
 </div>
@@ -519,24 +519,34 @@ function adaptRatio(img) {
   else { img.addEventListener('load', apply, { once: true }); }
 }
 
-function applyClassicStyle() {
+function applyClassicStyle(idx) {
   galleryMain.style.background = '#0a0a0a';
   mainImg.style.transform      = '';
   mainImg.style.cursor         = 'default';
-  adaptRatio(mainImg);
+  if (idx === 1) {
+    // Dos uni : contain + remonter légèrement le t-shirt
+    galleryMain.style.aspectRatio = '';
+    mainImg.style.width           = '100%';
+    mainImg.style.height          = '100%';
+    mainImg.style.display         = 'block';
+    mainImg.style.objectFit       = 'contain';
+    mainImg.style.objectPosition  = 'center 40%';
+  } else {
+    adaptRatio(mainImg);
+  }
 }
 
-thumbBtns.forEach(thumb => {
+thumbBtns.forEach((thumb, idx) => {
   thumb.addEventListener('click', () => {
     thumbBtns.forEach(t => t.classList.remove('active'));
     thumb.classList.add('active');
     mainImg.src = thumb.dataset.src;
     mainImg.alt = thumb.dataset.alt;
-    applyClassicStyle();
+    applyClassicStyle(idx);
   });
 });
 
-applyClassicStyle();
+applyClassicStyle(0);
 
 /* ===== SIZE PICKER ===== */
 document.getElementById('size-picker').addEventListener('click', e => {
