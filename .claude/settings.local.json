@@ -7,7 +7,11 @@
       "Bash(git commit *)",
       "Bash(git push *)",
       "Bash(py --version)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(sed -i 's|images/Etiquetteszoome%20sweat\\\\.webp|images/resized_image2.jpg|g' product-verbe.html)",
+      "Bash(sed -i 's|images/WhatsApp%20Image%202026-03-24%20at%2022\\\\.23\\\\.58\\\\.jpeg|images/resized_image.jpg|g' product.html)",
+      "Bash(cp \"c:/Users/33787/Desktop/Volombe/product.html\" \"c:/Users/33787/Desktop/Volombe/public/product.html\")",
+      "Bash(cp \"c:/Users/33787/Desktop/Volombe/product-basique.html\" \"c:/Users/33787/Desktop/Volombe/public/product-basique.html\")"
     ]
   }
 }
