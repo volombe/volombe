@@ -1,6 +1,11 @@
-import { redirect } from "next/navigation";
+import { readFile } from 'fs/promises'
+import path from 'path'
 
-// Redirige la route Next.js "/" vers le vrai site statique
-export default function HomePage() {
-  redirect("/index.html");
+export default async function HomePage() {
+  const filePath = path.join(process.cwd(), 'public', 'index.html')
+  const html = await readFile(filePath, 'utf-8')
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: html }} />
+  )
 }
