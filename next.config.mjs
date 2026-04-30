@@ -24,6 +24,31 @@ const nextConfig = {
         destination: '/:path*',
         permanent: true,
       },
+      {
+        source: '/collections/:path*',
+        destination: '/collection.html',
+        permanent: true,
+      },
+      {
+        source: '/blogs/:path*',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/pages/contact',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/pages/:path*',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/products/:path*',
+        destination: '/collection.html',
+        permanent: true,
+      },
     ]
   },
 };
