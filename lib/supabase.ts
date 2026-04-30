@@ -1,8 +1,28 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl      = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey  = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+let _admin: SupabaseClient | null = null
+let _anon:  SupabaseClient | null = null
 
-export const supabase      = createClient(supabaseUrl, supabaseAnonKey)
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+export function getSupabaseAdmin(): SupabaseClient {
+  if (!_admin) {
+    _admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    )
+  }
+  return _admin
+}
+
+export function getSupabase(): SupabaseClient {
+  if (!_anon) {
+    _anon = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+  }
+  return _anon
+}
+
+// Exports nommés pour compatibilité
+export const supabaseAdmin = { get: getSupabaseAdmin }
+export const supabase      = { get: getSupabase }

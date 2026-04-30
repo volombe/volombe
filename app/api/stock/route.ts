@@ -1,5 +1,7 @@
-import { supabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   const produit = request.nextUrl.searchParams.get('produit')
@@ -8,7 +10,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'produit requis' }, { status: 400 })
   }
 
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await getSupabaseAdmin()
     .from('stock')
     .select('*')
     .eq('produit', produit)
