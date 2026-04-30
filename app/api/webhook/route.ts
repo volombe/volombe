@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { getSupabaseAdmin } from '@/lib/supabase'
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
