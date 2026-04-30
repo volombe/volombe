@@ -93,6 +93,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteConfig.url,
   },
+  verification: {
+    google: 'vqIyRpqeEsO6ZQ2uYgSA0Uaz2mJVhWNUXdykqSvaOVw',
+  },
 };
 
 // ──────────────────────────────────────────────
