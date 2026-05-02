@@ -32,6 +32,7 @@ export interface OrderConfirmationProps {
   customerEmail: string
   items: OrderItem[]
   totalAmount: number
+  shippingCost: number
   shippingAddress: ShippingAddress
 }
 
@@ -40,6 +41,7 @@ export default function OrderConfirmation({
   customerEmail,
   items,
   totalAmount,
+  shippingCost,
   shippingAddress,
 }: OrderConfirmationProps) {
   return (
@@ -94,6 +96,14 @@ export default function OrderConfirmation({
 
             <Hr style={dividerLight} />
 
+            <Row>
+              <Column style={{ ...cell, width: '75%', textAlign: 'right' }}>
+                Livraison
+              </Column>
+              <Column style={{ ...cell, width: '25%', textAlign: 'right' }}>
+                {shippingCost === 0 ? 'Offerte' : `${shippingCost.toFixed(2).replace('.', ',')} €`}
+              </Column>
+            </Row>
             <Row>
               <Column style={{ ...cell, width: '75%', textAlign: 'right', fontWeight: '600' }}>
                 Total

@@ -20,6 +20,7 @@ export interface AdminNotificationProps {
   customerEmail: string
   items: OrderItem[]
   totalAmount: number
+  shippingCost: number
   shippingAddress: ShippingAddress
 }
 
@@ -28,6 +29,7 @@ export default function AdminNotification({
   customerEmail,
   items,
   totalAmount,
+  shippingCost,
   shippingAddress,
 }: AdminNotificationProps) {
   return (
@@ -68,6 +70,9 @@ export default function AdminNotification({
               </Row>
             ))}
             <Hr style={divider} />
+            <Text style={{ ...value, textAlign: 'right' }}>
+              Livraison : {shippingCost === 0 ? 'Offerte' : `${shippingCost.toFixed(2).replace('.', ',')} €`}
+            </Text>
             <Text style={{ ...value, fontWeight: '700', textAlign: 'right' }}>
               Total : {totalAmount.toFixed(2).replace('.', ',')} €
             </Text>
