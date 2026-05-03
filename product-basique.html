@@ -572,6 +572,7 @@ document.getElementById('qty-up').addEventListener('click', () => {
 document.getElementById('atc-btn').addEventListener('click', () => {
   const sel = document.querySelector('.sz.sel');
   if (!sel) { alert('Veuillez sélectionner une taille.'); return; }
+  if (sel.classList.contains('oos')) { alert('Cette taille est épuisée.'); return; }
   cartAdd({
     id: 'fondement',
     name: 'Le Fondement',
@@ -643,6 +644,7 @@ stickyObs.observe(prodAnchor);
 document.getElementById('sticky-atc-btn').addEventListener('click', () => {
   const sel = document.querySelector('.sz.sel');
   if (!sel) { alert('Veuillez sélectionner une taille.'); return; }
+  if (sel.classList.contains('oos')) { alert('Cette taille est épuisée.'); return; }
   cartAdd({
     id: 'fondement',
     name: 'Le Fondement',
@@ -755,27 +757,48 @@ if (rvSummary) barObs.observe(rvSummary);
     .then(function(r) { return r.json(); })
     .then(function(stock) {
       if (!stock || stock.error) return;
-      var btns = document.querySelectorAll('.sz:not([disabled])');
+
+      var btns = document.querySelectorAll('.sz');
       var totalStock = 0;
+
+      // 1. Marquer les tailles OOS
       btns.forEach(function(btn) {
         var taille = (btn.dataset.size || btn.textContent).trim().toLowerCase();
-        var qty = stock[taille];
+        var qty = (typeof stock[taille] === 'number') ? stock[taille] : null;
         if (qty === 0) {
           btn.classList.add('oos');
+          btn.classList.remove('sel');
           btn.disabled = true;
           btn.style.opacity = '0.3';
           btn.style.textDecoration = 'line-through';
-          btn.style.pointerEvents = 'none';
+          btn.style.cursor = 'not-allowed';
         } else {
-          totalStock += qty;
+          if (qty !== null) totalStock += qty;
+          // Taille disponible : s'assurer que le curseur est normal
+          btn.style.cursor = '';
         }
       });
+
+      // 2. Désélectionner si la taille sélectionnée est devenue OOS
+      var sel = document.querySelector('.sz.sel');
+      if (sel && sel.classList.contains('oos')) {
+        sel.classList.remove('sel');
+        sel = null;
+      }
+
+      // 3. Auto-sélectionner la première taille disponible
+      if (!document.querySelector('.sz.sel')) {
+        var first = document.querySelector('.sz:not(.oos):not([disabled])');
+        if (first) first.classList.add('sel');
+      }
+
+      // 4. Rupture totale
       if (totalStock === 0) {
         var atcBtn = document.getElementById('atc-btn');
         var stickyBtn = document.getElementById('sticky-atc-btn');
         [atcBtn, stickyBtn].forEach(function(b) {
           if (!b) return;
-          b.textContent = 'Rupture de stock';
+          b.textContent = 'Épuisé';
           b.disabled = true;
           b.style.opacity = '0.5';
           b.style.cursor = 'not-allowed';

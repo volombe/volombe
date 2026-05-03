@@ -542,6 +542,7 @@ document.getElementById('qty-up').addEventListener('click', () => {
 document.getElementById('atc-btn').addEventListener('click', function() {
   const sel = document.querySelector('.sz.sel');
   if (!sel) { this.textContent = 'Choisir une taille'; setTimeout(() => { this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Ajouter au panier'; }, 1500); return; }
+  if (sel && sel.classList.contains('oos')) { this.textContent = 'Cette taille est épuisée'; setTimeout(() => { this.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Ajouter au panier'; }, 1500); return; }
   cartAdd({
     id: 'conviction',
     name: 'Conviction',
@@ -586,6 +587,7 @@ window.addEventListener('scroll', () => {
 document.getElementById('sticky-atc-btn').addEventListener('click', function() {
   const sel = document.querySelector('.sz.sel');
   if (!sel) { this.textContent = 'Choisir une taille'; setTimeout(() => { this.textContent = 'Ajouter au panier'; }, 1500); return; }
+  if (sel && sel.classList.contains('oos')) { this.textContent = 'Cette taille est épuisée'; setTimeout(() => { this.textContent = 'Ajouter au panier'; }, 1500); return; }
   cartAdd({
     id: 'conviction',
     name: 'Conviction',
@@ -687,27 +689,48 @@ revealEls.forEach(el => io.observe(el));
     .then(function(r) { return r.json(); })
     .then(function(stock) {
       if (!stock || stock.error) return;
-      var btns = document.querySelectorAll('.sz:not([disabled])');
+
+      var btns = document.querySelectorAll('.sz');
       var totalStock = 0;
+
+      // 1. Marquer les tailles OOS
       btns.forEach(function(btn) {
         var taille = (btn.dataset.size || btn.textContent).trim().toLowerCase();
-        var qty = stock[taille];
+        var qty = (typeof stock[taille] === 'number') ? stock[taille] : null;
         if (qty === 0) {
           btn.classList.add('oos');
+          btn.classList.remove('sel');
           btn.disabled = true;
           btn.style.opacity = '0.3';
           btn.style.textDecoration = 'line-through';
-          btn.style.pointerEvents = 'none';
+          btn.style.cursor = 'not-allowed';
         } else {
-          totalStock += qty;
+          if (qty !== null) totalStock += qty;
+          // Taille disponible : s'assurer que le curseur est normal
+          btn.style.cursor = '';
         }
       });
+
+      // 2. Désélectionner si la taille sélectionnée est devenue OOS
+      var sel = document.querySelector('.sz.sel');
+      if (sel && sel.classList.contains('oos')) {
+        sel.classList.remove('sel');
+        sel = null;
+      }
+
+      // 3. Auto-sélectionner la première taille disponible
+      if (!document.querySelector('.sz.sel')) {
+        var first = document.querySelector('.sz:not(.oos):not([disabled])');
+        if (first) first.classList.add('sel');
+      }
+
+      // 4. Rupture totale
       if (totalStock === 0) {
         var atcBtn = document.getElementById('atc-btn');
         var stickyBtn = document.getElementById('sticky-atc-btn');
         [atcBtn, stickyBtn].forEach(function(b) {
           if (!b) return;
-          b.textContent = 'Rupture de stock';
+          b.textContent = 'Épuisé';
           b.disabled = true;
           b.style.opacity = '0.5';
           b.style.cursor = 'not-allowed';
