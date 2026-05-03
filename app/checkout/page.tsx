@@ -442,9 +442,8 @@ export default function CheckoutPage() {
       });
   }, []);
 
-  const subtotal    = items.reduce((s, i) => s + i.price * i.qty, 0);
-  const shipping    = subtotal >= 80 ? 0 : 5.90;
-  const grandTotal  = subtotal + shipping;
+  const subtotal   = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const grandTotal = subtotal; // frais de port calculés par Stripe selon le seuil 70 €
 
   /* ── États de chargement / erreur ── */
   if (loading) {
@@ -509,14 +508,11 @@ export default function CheckoutPage() {
 
           <div style={{ ...S.cartRow, fontSize: '0.8rem', color: 'rgba(245,240,232,0.5)' }}>
             <span>Livraison</span>
-            <span>{shipping === 0 ? 'Offerte' : '5,90 €'}</span>
+            <span>Calculée à l'étape suivante</span>
           </div>
-
-          {shipping > 0 && (
-            <p style={{ fontSize: '0.68rem', color: 'rgba(184,153,106,0.7)', marginTop: '-4px', letterSpacing: '0.05em' }}>
-              Livraison offerte dès 80 €
-            </p>
-          )}
+          <p style={{ fontSize: '0.68rem', color: 'rgba(184,153,106,0.7)', marginTop: '-4px', letterSpacing: '0.05em' }}>
+            Offerte dès 70 €
+          </p>
 
           <div style={S.divider} />
 
