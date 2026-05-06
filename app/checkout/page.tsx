@@ -196,7 +196,15 @@ const stripeAppearance = {
 /* ════════════════════════════════════════════════
    Formulaire de paiement (doit être dans <Elements>)
 ════════════════════════════════════════════════ */
-function CheckoutForm({ grandTotal }: { grandTotal: number }) {
+function CheckoutForm({
+  grandTotal,
+  items,
+  clientSecret,
+}: {
+  grandTotal: number;
+  items: CartItem[];
+  clientSecret: string;
+}) {
   const stripe   = useStripe();
   const elements = useElements();
 
@@ -220,6 +228,19 @@ function CheckoutForm({ grandTotal }: { grandTotal: number }) {
 
     setLoading(true);
     setError('');
+
+    // Mettre à jour le montant du PaymentIntent juste avant confirmation
+    // (garantit que PayPal et autres wallets voient le bon montant avec livraison)
+    try {
+      const paymentIntentId = clientSecret.split('_secret_')[0];
+      await fetch('/api/update-payment-intent', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ paymentIntentId, items }),
+      });
+    } catch {
+      // Non bloquant — on continue même si la mise à jour échoue
+    }
 
     const { error: stripeError } = await stripe.confirmPayment({
       elements,
@@ -544,7 +565,7 @@ export default function CheckoutPage() {
               stripe={stripePromise}
               options={{ clientSecret, appearance: stripeAppearance, locale: 'fr' }}
             >
-              <CheckoutForm grandTotal={grandTotal} />
+              <CheckoutForm grandTotal={grandTotal} items={items} clientSecret={clientSecret} />
             </Elements>
           )}
         </section>
