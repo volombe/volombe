@@ -26,13 +26,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Webhook invalide' }, { status: 400 })
   }
 
-  if (event.type === 'payment_intent.succeeded') {
-    const paymentIntent = event.data.object as Stripe.PaymentIntent
+  // ── charge.succeeded : données client + email toujours disponibles ──
+  if (event.type === 'charge.succeeded') {
+    const charge = event.data.object as Stripe.Charge
+
+    // Récupérer le PaymentIntent lié pour les métadonnées (items, shippingCost, shipping)
+    let pi: Stripe.PaymentIntent | null = null
+    try {
+      pi = await stripe.paymentIntents.retrieve(
+        charge.payment_intent as string
+      )
+    } catch (piErr: any) {
+      console.error('[Volombe] PaymentIntent retrieve error:', piErr?.message)
+      return NextResponse.json({ received: true }, { status: 200 })
+    }
+
+    // Métadonnées items depuis le PaymentIntent
+    const metaItems: Array<{ id: string; size: string; qty: number; name: string; price: number }> =
+      pi.metadata?.items ? JSON.parse(pi.metadata.items) : []
 
     // ── 1. STOCK — décrémenter dans Supabase ──────────────────────────
-    const metaItems: Array<{ id: string; size: string; qty: number; name: string; price: number }> =
-      paymentIntent.metadata?.items ? JSON.parse(paymentIntent.metadata.items) : []
-
     try {
       const db = getSupabaseAdmin()
 
@@ -66,42 +79,35 @@ export async function POST(request: NextRequest) {
 
     // ── 2. EMAILS — dans un try/catch complètement isolé ──────────────
     try {
-      // Récupérer la charge pour avoir l'email et les billing_details
-      const charge = await stripe.charges.retrieve(
-        paymentIntent.latest_charge as string
-      )
-
-      const customerEmail = charge.billing_details?.email
-        ?? paymentIntent.receipt_email
-        ?? null
-
-      const customerName = charge.billing_details?.name
-        ?? paymentIntent.shipping?.name
-        ?? 'Client'
-
-      // Adresse depuis paymentIntent.shipping (transmise par confirmPayment)
-      const shipping = paymentIntent.shipping
-      const shippingAddress = {
-        line1:      shipping?.address?.line1       ?? '',
-        city:       shipping?.address?.city        ?? '',
-        postalCode: shipping?.address?.postal_code ?? '',
-        country:    shipping?.address?.country     ?? '',
-      }
-
-      const totalAmount  = paymentIntent.amount / 100
-      const shippingCost = parseFloat(paymentIntent.metadata?.shippingCost ?? '0')
-
-      // Construire les items depuis les métadonnées
-      const items = metaItems.map((item) => ({
-        name:      item.name ?? item.id ?? 'Produit',
-        quantity:  item.qty  ?? 1,
-        unitPrice: item.price ?? 0,
-        size:      item.size  ?? '',
-      }))
+      // Email et nom depuis charge.billing_details (toujours rempli par confirmPayment)
+      const customerEmail: string | null = charge.billing_details?.email ?? null
+      const customerName: string =
+        charge.billing_details?.name ??
+        pi.shipping?.name ??
+        'Client'
 
       if (!customerEmail) {
-        console.error('[Resend] Email client manquant — envoi annulé')
+        console.error('[Resend] customerEmail introuvable dans charge.billing_details — envoi annulé')
       } else {
+        // Adresse de livraison depuis pi.shipping (transmise par confirmPayment → shipping)
+        const shipping = pi.shipping
+        const shippingAddress = {
+          line1:      shipping?.address?.line1       ?? charge.shipping?.address?.line1       ?? '',
+          city:       shipping?.address?.city        ?? charge.shipping?.address?.city        ?? '',
+          postalCode: shipping?.address?.postal_code ?? charge.shipping?.address?.postal_code ?? '',
+          country:    shipping?.address?.country     ?? charge.shipping?.address?.country     ?? '',
+        }
+
+        const totalAmount  = charge.amount / 100
+        const shippingCost = parseFloat(pi.metadata?.shippingCost ?? '0')
+
+        const items = metaItems.map((item) => ({
+          name:      item.name  ?? item.id ?? 'Produit',
+          quantity:  item.qty   ?? 1,
+          unitPrice: item.price ?? 0,
+          size:      item.size  ?? '',
+        }))
+
         const resend = getResend()
         const [clientResult, adminResult] = await Promise.allSettled([
           resend.emails.send({
@@ -148,7 +154,6 @@ export async function POST(request: NextRequest) {
         )
       }
     } catch (emailErr: any) {
-      // Ne jamais throw — Stripe doit toujours recevoir un 200
       console.error('[Resend] Erreur inattendue:', emailErr?.message)
     }
   }
