@@ -3,6 +3,8 @@ import { getSupabaseAdmin } from '@/lib/supabase'
 import { getResend } from '@/lib/resend'
 import OrderConfirmation from '@/lib/emails/orderConfirmation'
 import AdminNotification from '@/lib/emails/adminNotification'
+import { render } from '@react-email/render'
+import { createElement } from 'react'
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -78,7 +80,6 @@ export async function POST(request: NextRequest) {
 
     // ── 2. EMAILS — dans un try/catch complètement isolé ──────────────
     try {
-      // Email et nom depuis charge.billing_details (toujours rempli par confirmPayment)
       const customerEmail: string | null = charge.billing_details?.email ?? null
       const customerName: string =
         charge.billing_details?.name ??
@@ -88,7 +89,6 @@ export async function POST(request: NextRequest) {
       if (!customerEmail) {
         console.error('[Resend] customerEmail introuvable dans charge.billing_details — envoi annulé')
       } else {
-        // Adresse de livraison depuis pi.shipping (transmise par confirmPayment → shipping)
         const shipping = pi.shipping
         const shippingAddress = {
           line1:      shipping?.address?.line1       ?? charge.shipping?.address?.line1       ?? '',
@@ -107,37 +107,34 @@ export async function POST(request: NextRequest) {
           size:      item.size  ?? '',
         }))
 
+        const emailProps = {
+          customerName,
+          customerEmail,
+          items,
+          totalAmount,
+          shippingCost,
+          shippingAddress,
+        }
+
+        // Pré-rendre les composants en HTML via @react-email/render
+        const [clientHtml, adminHtml] = await Promise.all([
+          render(createElement(OrderConfirmation, emailProps)),
+          render(createElement(AdminNotification, emailProps)),
+        ])
+
         const resend = getResend()
         const [clientResult, adminResult] = await Promise.allSettled([
           resend.emails.send({
             from:    'VOLOMBE <noreply@volombe.fr>',
             to:      [customerEmail],
             subject: 'Merci pour votre commande — VOLOMBE',
-            react:   (
-              <OrderConfirmation
-                customerName={customerName}
-                customerEmail={customerEmail}
-                items={items}
-                totalAmount={totalAmount}
-                shippingCost={shippingCost}
-                shippingAddress={shippingAddress}
-              />
-            ),
+            html:    clientHtml,
           }),
           resend.emails.send({
             from:    'VOLOMBE <noreply@volombe.fr>',
             to:      ['sav.contact@volombe.fr'],
             subject: `Nouvelle commande — ${customerName}`,
-            react:   (
-              <AdminNotification
-                customerName={customerName}
-                customerEmail={customerEmail}
-                items={items}
-                totalAmount={totalAmount}
-                shippingCost={shippingCost}
-                shippingAddress={shippingAddress}
-              />
-            ),
+            html:    adminHtml,
           }),
         ])
 
