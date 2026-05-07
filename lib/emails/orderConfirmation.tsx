@@ -2,12 +2,9 @@ import {
   Body,
   Container,
   Head,
-  Heading,
   Hr,
   Html,
   Preview,
-  Row,
-  Column,
   Section,
   Text,
 } from '@react-email/components'
@@ -38,201 +35,268 @@ export interface OrderConfirmationProps {
 
 export default function OrderConfirmation({
   customerName,
-  customerEmail,
+  customerEmail: _customerEmail,
   items,
   totalAmount,
   shippingCost,
   shippingAddress,
 }: OrderConfirmationProps) {
+  const subtotal    = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
+  const dateRef     = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+  const fmt         = (n: number) => n.toFixed(2).replace('.', ',') + ' €'
+
   return (
     <Html lang="fr">
       <Head />
       <Preview>Merci pour votre commande — VOLOMBE</Preview>
-      <Body style={main}>
-        <Container style={container}>
+      <Body style={{ margin: '0', padding: '0', backgroundColor: '#080808', fontFamily: 'Arial, Helvetica, sans-serif' }}>
 
-          {/* En-tête */}
-          <Section style={header}>
-            <Text style={logo}>VOLOMBE</Text>
-          </Section>
+        {/* ── Wrapper principal ── */}
+        <table width="100%" cellPadding="0" cellSpacing="0" style={{ backgroundColor: '#080808' }}>
+          <tbody>
+            <tr>
+              <td align="center" style={{ padding: '32px 16px' }}>
 
-          <Hr style={divider} />
+                {/* ── Carte email 600px ── */}
+                <table width="600" cellPadding="0" cellSpacing="0" style={{ maxWidth: '600px', backgroundColor: '#111111', border: '1px solid #1e1e1e' }}>
+                  <tbody>
 
-          {/* Titre */}
-          <Section style={section}>
-            <Heading style={h1}>Merci pour votre commande</Heading>
-            <Text style={body}>
-              Bonjour {customerName},
-            </Text>
-            <Text style={body}>
-              Nous avons bien reçu votre commande et elle est en cours de préparation.
-            </Text>
-          </Section>
+                    {/* ══════════ 1. HEADER ══════════ */}
+                    <tr>
+                      <td align="center" style={{ backgroundColor: '#080808', padding: '36px 48px 28px' }}>
+                        <table cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <td style={{ borderTop: '1px solid #c8a96e', borderBottom: '1px solid #c8a96e', padding: '10px 32px', textAlign: 'center' }}>
+                                <span style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '22px', fontWeight: '400', letterSpacing: '0.55em', color: '#f5f0e8', textTransform: 'uppercase' }}>
+                                  VOLOMBE
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <p style={{ margin: '12px 0 0', fontSize: '10px', letterSpacing: '0.3em', color: '#c8a96e', textTransform: 'uppercase', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+                          Vêtements chrétiens premium
+                        </p>
+                      </td>
+                    </tr>
 
-          <Hr style={divider} />
+                    {/* ══════════ 2. HERO BAND ══════════ */}
+                    <tr>
+                      <td align="center" style={{ backgroundColor: '#0d0d0d', borderBottom: '1px solid #c8a96e', padding: '32px 48px' }}>
+                        <p style={{ margin: '0 0 10px', fontSize: '10px', letterSpacing: '0.25em', color: '#c8a96e', textTransform: 'uppercase', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+                          Confirmation de commande
+                        </p>
+                        <p style={{ margin: '0', fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '24px', fontWeight: '400', color: '#f5f0e8', letterSpacing: '0.02em' }}>
+                          Merci pour votre confiance
+                        </p>
+                      </td>
+                    </tr>
 
-          {/* Récapitulatif */}
-          <Section style={section}>
-            <Text style={sectionTitle}>Récapitulatif</Text>
+                    {/* ══════════ 3. CORPS ══════════ */}
+                    <tr>
+                      <td style={{ backgroundColor: '#111111', padding: '40px 48px' }}>
 
-            {/* En-têtes tableau */}
-            <Row style={tableHeader}>
-              <Column style={{ ...cell, width: '40%' }}>Produit</Column>
-              <Column style={{ ...cell, width: '20%' }}>Taille</Column>
-              <Column style={{ ...cell, width: '15%' }}>Qté</Column>
-              <Column style={{ ...cell, width: '25%', textAlign: 'right' }}>Prix</Column>
-            </Row>
+                        {/* ── a) Salutation ── */}
+                        <p style={{ margin: '0 0 12px', fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '15px', color: '#e8e0d0' }}>
+                          Bonjour {customerName},
+                        </p>
+                        <p style={{ margin: '0 0 28px', fontSize: '13px', lineHeight: '1.85', color: '#888888' }}>
+                          Nous avons bien reçu votre commande. Chaque pièce Volombe est brodée avec soin en France — votre commande est en cours de préparation et sera expédiée sous{' '}
+                          <span style={{ color: '#c8a96e' }}>3 à 5 jours ouvrés</span>.
+                        </p>
 
-            {items.map((item, i) => (
-              <Row key={i} style={tableRow}>
-                <Column style={{ ...cell, width: '40%' }}>{item.name}</Column>
-                <Column style={{ ...cell, width: '20%' }}>{item.size}</Column>
-                <Column style={{ ...cell, width: '15%' }}>{item.quantity}</Column>
-                <Column style={{ ...cell, width: '25%', textAlign: 'right' }}>
-                  {(item.unitPrice * item.quantity).toFixed(2).replace('.', ',')} €
-                </Column>
-              </Row>
-            ))}
+                        {/* ── b) Séparateur ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ marginBottom: '24px' }}>
+                          <tbody><tr><td style={{ borderTop: '1px solid #222222', fontSize: '0', lineHeight: '0' }}>&nbsp;</td></tr></tbody>
+                        </table>
 
-            <Hr style={dividerLight} />
+                        {/* ── c) Référence commande ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ backgroundColor: '#0d0d0d', border: '1px solid #1e1e1e', marginBottom: '28px' }}>
+                          <tbody>
+                            <tr>
+                              <td style={{ padding: '12px 16px' }}>
+                                <span style={{ fontSize: '10px', color: '#555555', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                                  Référence commande
+                                </span>
+                              </td>
+                              <td align="right" style={{ padding: '12px 16px' }}>
+                                <span style={{ fontSize: '12px', color: '#c8a96e', letterSpacing: '0.1em' }}>
+                                  #VLB-{dateRef}
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-            <Row>
-              <Column style={{ ...cell, width: '75%', textAlign: 'right' }}>
-                Livraison
-              </Column>
-              <Column style={{ ...cell, width: '25%', textAlign: 'right' }}>
-                {shippingCost === 0 ? 'Offerte' : `${shippingCost.toFixed(2).replace('.', ',')} €`}
-              </Column>
-            </Row>
-            <Row>
-              <Column style={{ ...cell, width: '75%', textAlign: 'right', fontWeight: '600' }}>
-                Total
-              </Column>
-              <Column style={{ ...cell, width: '25%', textAlign: 'right', fontWeight: '600' }}>
-                {totalAmount.toFixed(2).replace('.', ',')} €
-              </Column>
-            </Row>
-          </Section>
+                        {/* ── d) Titre section ── */}
+                        <p style={{ margin: '0 0 12px', fontSize: '9px', color: '#555555', textTransform: 'uppercase', letterSpacing: '0.25em' }}>
+                          Votre sélection
+                        </p>
 
-          <Hr style={divider} />
+                        {/* ── e) Items ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ marginBottom: '0' }}>
+                          <tbody>
+                            {items.map((item, i) => (
+                              <tr key={i}>
+                                <td style={{ padding: '14px 0', borderBottom: '1px solid #1e1e1e', verticalAlign: 'top' }}>
+                                  <table width="100%" cellPadding="0" cellSpacing="0">
+                                    <tbody>
+                                      <tr>
+                                        {/* Placeholder image */}
+                                        <td width="60" valign="top" style={{ paddingRight: '14px' }}>
+                                          <div style={{ width: '48px', height: '48px', backgroundColor: '#1a1a1a', border: '1px solid #2a2a2a', display: 'table-cell', textAlign: 'center', verticalAlign: 'middle' }}>
+                                            <span style={{ fontSize: '8px', color: '#555555', fontFamily: 'Arial' }}>VLB</span>
+                                          </div>
+                                        </td>
+                                        {/* Nom + meta */}
+                                        <td valign="top">
+                                          <p style={{ margin: '0 0 4px', fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '13px', color: '#e8e0d0' }}>
+                                            {item.name}
+                                          </p>
+                                          <p style={{ margin: '0', fontSize: '11px', color: '#666666' }}>
+                                            T-shirt · Taille {item.size} · Qté {item.quantity}
+                                          </p>
+                                        </td>
+                                        {/* Prix */}
+                                        <td align="right" valign="top" style={{ whiteSpace: 'nowrap' }}>
+                                          <span style={{ fontSize: '14px', color: '#f5f0e8' }}>
+                                            {fmt(item.unitPrice * item.quantity)}
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
 
-          {/* Adresse */}
-          <Section style={section}>
-            <Text style={sectionTitle}>Adresse de livraison</Text>
-            <Text style={addressText}>{customerName}</Text>
-            <Text style={addressText}>{shippingAddress.line1}</Text>
-            <Text style={addressText}>
-              {shippingAddress.postalCode} {shippingAddress.city}
-            </Text>
-            <Text style={addressText}>{shippingAddress.country}</Text>
-          </Section>
+                        {/* ── f) Tableau totaux ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ backgroundColor: '#0d0d0d', border: '1px solid #1e1e1e', borderTop: 'none', marginBottom: '28px' }}>
+                          <tbody>
+                            <tr>
+                              <td style={{ padding: '10px 16px', fontSize: '12px', color: '#666666' }}>Sous-total</td>
+                              <td align="right" style={{ padding: '10px 16px', fontSize: '12px', color: '#aaaaaa' }}>{fmt(subtotal)}</td>
+                            </tr>
+                            <tr>
+                              <td style={{ padding: '10px 16px', fontSize: '12px', color: '#666666' }}>
+                                {shippingCost === 0 ? 'Livraison offerte' : 'Livraison standard'}
+                              </td>
+                              <td align="right" style={{ padding: '10px 16px', fontSize: '12px', color: shippingCost === 0 ? '#6dbf8e' : '#c8a96e' }}>
+                                {shippingCost === 0 ? 'Gratuite' : fmt(shippingCost)}
+                              </td>
+                            </tr>
+                            <tr style={{ borderTop: '1px solid #c8a96e' }}>
+                              <td style={{ padding: '14px 16px', borderTop: '1px solid #c8a96e' }}>
+                                <span style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '13px', color: '#f5f0e8' }}>
+                                  Total TTC
+                                </span>
+                              </td>
+                              <td align="right" style={{ padding: '14px 16px', borderTop: '1px solid #c8a96e' }}>
+                                <span style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '16px', color: '#ffffff' }}>
+                                  {fmt(totalAmount)}
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-          <Hr style={divider} />
+                        {/* ── g) Séparateur ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ marginBottom: '28px' }}>
+                          <tbody><tr><td style={{ borderTop: '1px solid #1e1e1e', fontSize: '0', lineHeight: '0' }}>&nbsp;</td></tr></tbody>
+                        </table>
 
-          {/* Message expédition */}
-          <Section style={section}>
-            <Text style={body}>
-              Votre commande est en cours de préparation. Vous recevrez un email
-              dès l'expédition sous <strong>3 à 5 jours ouvrés</strong>.
-            </Text>
-          </Section>
+                        {/* ── h) Adresse + Délai ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ marginBottom: '28px' }}>
+                          <tbody>
+                            <tr>
+                              {/* Adresse */}
+                              <td width="50%" valign="top" style={{ paddingRight: '20px' }}>
+                                <p style={{ margin: '0 0 8px', fontSize: '9px', color: '#555555', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                                  Adresse de livraison
+                                </p>
+                                <p style={{ margin: '0', fontSize: '13px', color: '#aaaaaa', lineHeight: '2' }}>
+                                  {shippingAddress.line1}<br />
+                                  {shippingAddress.postalCode} {shippingAddress.city}<br />
+                                  {shippingAddress.country}
+                                </p>
+                              </td>
+                              {/* Délai */}
+                              <td width="50%" valign="top" style={{ paddingLeft: '20px', borderLeft: '1px solid #1e1e1e' }}>
+                                <p style={{ margin: '0 0 8px', fontSize: '9px', color: '#555555', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                                  Délai estimé
+                                </p>
+                                <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#aaaaaa', lineHeight: '2' }}>
+                                  3 à 5 jours ouvrés
+                                </p>
+                                <span style={{ display: 'inline-block', backgroundColor: '#0d0d0d', border: '1px solid #c8a96e', padding: '5px 14px', fontSize: '10px', color: '#c8a96e', letterSpacing: '0.08em' }}>
+                                  En préparation
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-          <Hr style={divider} />
+                        {/* ── i) Séparateur ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0" style={{ marginBottom: '28px' }}>
+                          <tbody><tr><td style={{ borderTop: '1px solid #1e1e1e', fontSize: '0', lineHeight: '0' }}>&nbsp;</td></tr></tbody>
+                        </table>
 
-          {/* Pied de page */}
-          <Section style={footer}>
-            <Text style={footerText}>L'équipe Volombe</Text>
-            <Text style={footerText}>noreply@volombe.fr</Text>
-          </Section>
+                        {/* ── j) Verset biblique ── */}
+                        <table width="100%" cellPadding="0" cellSpacing="0">
+                          <tbody>
+                            <tr>
+                              <td align="center" style={{ padding: '0 16px' }}>
+                                <p style={{ margin: '0 0 8px', fontFamily: 'Georgia, "Times New Roman", serif', fontSize: '13px', fontStyle: 'italic', color: '#666666', lineHeight: '1.9' }}>
+                                  « Car c'est par la grâce que vous êtes sauvés, par le moyen de la foi. »
+                                </p>
+                                <p style={{ margin: '0', fontSize: '10px', color: '#444444', letterSpacing: '0.1em' }}>
+                                  Éphésiens 2:8
+                                </p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
 
-        </Container>
+                      </td>
+                    </tr>
+
+                    {/* ══════════ 4. FOOTER ══════════ */}
+                    <tr>
+                      <td align="center" style={{ backgroundColor: '#0a0a0a', borderTop: '1px solid #1e1e1e', padding: '28px 48px' }}>
+                        <p style={{ margin: '0 0 8px', fontSize: '11px', color: '#555555', lineHeight: '1.8' }}>
+                          Pour toute question :{' '}
+                          <a href="mailto:sav.contact@volombe.fr" style={{ color: '#c8a96e', textDecoration: 'none' }}>
+                            sav.contact@volombe.fr
+                          </a>
+                        </p>
+                        <p style={{ margin: '0', fontSize: '10px', color: '#333333', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+                          L'équipe Volombe · noreply@volombe.fr
+                        </p>
+                      </td>
+                    </tr>
+
+                    {/* ══════════ 5. BAS DE PAGE ══════════ */}
+                    <tr>
+                      <td align="center" style={{ backgroundColor: '#080808', padding: '16px 48px' }}>
+                        <p style={{ margin: '0', fontSize: '10px', color: '#2a2a2a' }}>
+                          © 2026 Volombe · Tous droits réservés
+                        </p>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+                {/* fin carte 600px */}
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
       </Body>
     </Html>
   )
-}
-
-/* ─── Styles ─── */
-const main: React.CSSProperties = {
-  backgroundColor: '#ffffff',
-  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
-}
-const container: React.CSSProperties = {
-  maxWidth: '560px',
-  margin: '40px auto',
-  padding: '0 20px',
-}
-const header: React.CSSProperties = {
-  textAlign: 'center',
-  paddingTop: '40px',
-  paddingBottom: '24px',
-}
-const logo: React.CSSProperties = {
-  fontSize: '24px',
-  fontWeight: '400',
-  letterSpacing: '0.3em',
-  color: '#0a0a0a',
-  margin: '0',
-}
-const divider: React.CSSProperties = {
-  borderColor: '#0a0a0a',
-  borderTopWidth: '1px',
-  margin: '0',
-}
-const dividerLight: React.CSSProperties = {
-  borderColor: '#e5e5e5',
-  borderTopWidth: '1px',
-  margin: '8px 0',
-}
-const section: React.CSSProperties = {
-  padding: '32px 0',
-}
-const h1: React.CSSProperties = {
-  fontSize: '22px',
-  fontWeight: '400',
-  color: '#0a0a0a',
-  margin: '0 0 16px',
-  letterSpacing: '0.01em',
-}
-const sectionTitle: React.CSSProperties = {
-  fontSize: '11px',
-  fontWeight: '500',
-  letterSpacing: '0.15em',
-  textTransform: 'uppercase',
-  color: '#666',
-  margin: '0 0 16px',
-}
-const body: React.CSSProperties = {
-  fontSize: '14px',
-  lineHeight: '1.8',
-  color: '#333',
-  margin: '0 0 12px',
-}
-const tableHeader: React.CSSProperties = {
-  borderBottom: '1px solid #0a0a0a',
-  paddingBottom: '8px',
-  marginBottom: '8px',
-}
-const tableRow: React.CSSProperties = {
-  borderBottom: '1px solid #f0f0f0',
-}
-const cell: React.CSSProperties = {
-  fontSize: '13px',
-  color: '#333',
-  padding: '10px 4px',
-}
-const addressText: React.CSSProperties = {
-  fontSize: '14px',
-  lineHeight: '1.6',
-  color: '#333',
-  margin: '0 0 4px',
-}
-const footer: React.CSSProperties = {
-  textAlign: 'center',
-  padding: '24px 0 40px',
-}
-const footerText: React.CSSProperties = {
-  fontSize: '12px',
-  color: '#999',
-  margin: '0 0 4px',
-  letterSpacing: '0.05em',
 }
