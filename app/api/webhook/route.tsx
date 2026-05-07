@@ -5,7 +5,6 @@ import OrderConfirmation from '@/lib/emails/orderConfirmation'
 import AdminNotification from '@/lib/emails/adminNotification'
 import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
-import { createElement } from 'react'
 
 export const dynamic = 'force-dynamic'
 
@@ -114,27 +113,31 @@ export async function POST(request: NextRequest) {
             from:    'VOLOMBE <noreply@volombe.fr>',
             to:      [customerEmail],
             subject: 'Merci pour votre commande — VOLOMBE',
-            react:   createElement(OrderConfirmation, {
-              customerName,
-              customerEmail,
-              items,
-              totalAmount,
-              shippingCost,
-              shippingAddress,
-            }),
+            react:   (
+              <OrderConfirmation
+                customerName={customerName}
+                customerEmail={customerEmail}
+                items={items}
+                totalAmount={totalAmount}
+                shippingCost={shippingCost}
+                shippingAddress={shippingAddress}
+              />
+            ),
           }),
           resend.emails.send({
             from:    'VOLOMBE <noreply@volombe.fr>',
             to:      ['sav.contact@volombe.fr'],
             subject: `Nouvelle commande — ${customerName}`,
-            react:   createElement(AdminNotification, {
-              customerName,
-              customerEmail,
-              items,
-              totalAmount,
-              shippingCost,
-              shippingAddress,
-            }),
+            react:   (
+              <AdminNotification
+                customerName={customerName}
+                customerEmail={customerEmail}
+                items={items}
+                totalAmount={totalAmount}
+                shippingCost={shippingCost}
+                shippingAddress={shippingAddress}
+              />
+            ),
           }),
         ])
 
