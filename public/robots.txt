@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /success
+Disallow: /cancel
+
+Sitemap: https://www.volombe.fr/sitemap.xml
