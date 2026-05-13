@@ -65,6 +65,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (authed) fetchOrders()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authed])
 
   function showToast(msg: string, ok = true) {
@@ -521,11 +522,10 @@ const s: Record<string, React.CSSProperties> = {
     marginTop: '4px',
   },
   trackingBlock: {
-    marginTop: '4px',
+    marginTop: '16px',
     backgroundColor: '#0d0d0d',
     border: '1px solid #1e1e1e',
     padding: '16px',
-    marginTop: '16px',
   },
   labelLink: {
     display: 'inline-block',
