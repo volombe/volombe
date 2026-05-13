@@ -78,7 +78,31 @@ export async function POST(request: NextRequest) {
       console.error('[Volombe] Erreur stock Supabase:', stockErr?.message)
     }
 
-    // ── 2. EMAILS — dans un try/catch complètement isolé ──────────────
+    // ── 2. ORDERS — sauvegarder dans Supabase ────────────────────────
+    try {
+      const db = getSupabaseAdmin()
+      await db.from('orders').upsert({
+        stripe_charge_id:          charge.id,
+        stripe_payment_intent_id:  pi.id,
+        customer_name:             charge.billing_details?.name ?? pi.shipping?.name ?? 'Client',
+        customer_email:            charge.billing_details?.email ?? '',
+        items:                     metaItems,
+        total_amount:              charge.amount / 100,
+        shipping_cost:             parseFloat(pi.metadata?.shippingCost ?? '0'),
+        shipping_address: {
+          line1:      pi.shipping?.address?.line1       ?? charge.shipping?.address?.line1       ?? '',
+          city:       pi.shipping?.address?.city        ?? charge.shipping?.address?.city        ?? '',
+          postalCode: pi.shipping?.address?.postal_code ?? charge.shipping?.address?.postal_code ?? '',
+          country:    pi.shipping?.address?.country     ?? charge.shipping?.address?.country     ?? '',
+        },
+        status: 'pending',
+      }, { onConflict: 'stripe_charge_id' })
+      console.log('[Volombe] Order saved:', charge.id)
+    } catch (orderErr: any) {
+      console.error('[Volombe] Erreur save order:', orderErr?.message)
+    }
+
+    // ── 3. EMAILS — dans un try/catch complètement isolé ──────────────
     try {
       const customerEmail: string | null = charge.billing_details?.email ?? null
       const customerName: string =
