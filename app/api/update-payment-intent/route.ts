@@ -15,29 +15,44 @@ interface CartItem {
   qty: number
 }
 
+interface UpdateBody {
+  paymentIntentId: string
+  items: CartItem[]
+  deliveryMode: 'home' | 'relay'
+  relayId?: string
+  relayName?: string
+  relayAddress?: string
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { paymentIntentId, items }: { paymentIntentId: string; items: CartItem[] } = await req.json()
+    const {
+      paymentIntentId, items,
+      deliveryMode = 'relay',
+      relayId      = '',
+      relayName    = '',
+      relayAddress = '',
+    }: UpdateBody = await req.json()
 
     if (!paymentIntentId || !items?.length) {
       return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
     }
 
-    const subtotal    = items.reduce((sum, i) => sum + i.price * i.qty, 0)
-    const shippingCost = subtotal >= 70 ? 0 : 5.99
-    const amount      = Math.round((subtotal + shippingCost) * 100)
+    const subtotal     = items.reduce((sum, i) => sum + i.price * i.qty, 0)
+    const shippingCost = subtotal >= 70 ? 0 : (deliveryMode === 'relay' ? 4.99 : 6.99)
+    const amount       = Math.round((subtotal + shippingCost) * 100)
 
     await stripe.paymentIntents.update(paymentIntentId, {
       amount,
       metadata: {
-        items: JSON.stringify(items.map(i => ({
-          id:    i.id,
-          name:  i.name,
-          size:  i.size,
-          qty:   i.qty,
-          price: i.price,
-        }))),
+        items: JSON.stringify(
+          items.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty, price: i.price }))
+        ),
         shippingCost: String(shippingCost),
+        deliveryMode,
+        relayId,
+        relayName,
+        relayAddress,
       },
     })
 

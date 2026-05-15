@@ -24,6 +24,16 @@ interface CartItem {
   img?: string;
 }
 
+interface RelayPoint {
+  id: string;
+  nom: string;
+  adresse: string;
+  ville: string;
+  codePostal: string;
+  distance: string;
+  horaires: string;
+}
+
 /* ─── Styles partagés ─── */
 const S = {
   page: {
@@ -200,10 +210,18 @@ function CheckoutForm({
   grandTotal,
   items,
   clientSecret,
+  deliveryMode,
+  setDeliveryMode,
+  selectedRelay,
+  setSelectedRelay,
 }: {
   grandTotal: number;
   items: CartItem[];
   clientSecret: string;
+  deliveryMode: 'relay' | 'home';
+  setDeliveryMode: (m: 'relay' | 'home') => void;
+  selectedRelay: RelayPoint | null;
+  setSelectedRelay: (r: RelayPoint | null) => void;
 }) {
   const stripe   = useStripe();
   const elements = useElements();
@@ -218,53 +236,97 @@ function CheckoutForm({
   const [loading,    setLoading]    = useState(false);
   const [error,      setError]      = useState('');
 
+  const [relaySearch,  setRelaySearch]  = useState('');
+  const [relayPoints,  setRelayPoints]  = useState<RelayPoint[]>([]);
+  const [relayLoading, setRelayLoading] = useState(false);
+
   const paysISO: Record<string, string> = {
     FR: 'France', BE: 'Belgique', CH: 'Suisse', LU: 'Luxembourg', CA: 'Canada',
+  };
+
+  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  const searchRelayPoints = async () => {
+    if (!relaySearch.trim()) return;
+    setRelayLoading(true);
+    try {
+      const res = await fetch(`/api/relay-points?codePostal=${encodeURIComponent(relaySearch.trim())}&pays=FR`);
+      const data: unknown = await res.json();
+      setRelayPoints(Array.isArray(data) ? (data as RelayPoint[]) : []);
+    } catch {
+      setRelayPoints([]);
+    } finally {
+      setRelayLoading(false);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
+    if (deliveryMode === 'relay' && !selectedRelay) {
+      setError('Veuillez sélectionner un point relais.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
-    // Mettre à jour le montant du PaymentIntent juste avant confirmation
-    // (garantit que PayPal et autres wallets voient le bon montant avec livraison)
     try {
       const paymentIntentId = clientSecret.split('_secret_')[0];
       await fetch('/api/update-payment-intent', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ paymentIntentId, items }),
+        body: JSON.stringify({
+          paymentIntentId,
+          items,
+          deliveryMode,
+          relayId:      selectedRelay?.id  ?? '',
+          relayName:    selectedRelay?.nom ?? '',
+          relayAddress: selectedRelay
+            ? `${selectedRelay.adresse}, ${selectedRelay.codePostal} ${selectedRelay.ville}`
+            : '',
+        }),
       });
     } catch {
       // Non bloquant — on continue même si la mise à jour échoue
     }
 
+    const shippingAddress = deliveryMode === 'relay' && selectedRelay
+      ? {
+          line1:       selectedRelay.adresse || selectedRelay.nom,
+          city:        selectedRelay.ville,
+          postal_code: selectedRelay.codePostal,
+          country:     'FR' as const,
+        }
+      : {
+          line1:       adresse,
+          line2:       complement || undefined,
+          postal_code: codePostal,
+          city:        ville,
+          country:     pays,
+        };
+
     const { error: stripeError } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/success`,
-        shipping: {
-          name,
-          address: {
-            line1:       adresse,
-            line2:       complement || undefined,
-            postal_code: codePostal,
-            city:        ville,
-            country:     pays,
-          },
-        },
+        shipping: { name, address: shippingAddress },
         payment_method_data: {
           billing_details: {
             name,
             email,
             address: {
-              line1:       adresse,
-              postal_code: codePostal,
-              city:        ville,
-              country:     pays,
+              line1:       deliveryMode === 'relay' && selectedRelay
+                             ? (selectedRelay.adresse || selectedRelay.nom)
+                             : adresse,
+              postal_code: deliveryMode === 'relay' && selectedRelay
+                             ? selectedRelay.codePostal
+                             : codePostal,
+              city:        deliveryMode === 'relay' && selectedRelay
+                             ? selectedRelay.ville
+                             : ville,
+              country:     deliveryMode === 'relay' ? 'FR' : pays,
             },
           },
         },
@@ -312,96 +374,192 @@ function CheckoutForm({
         />
       </div>
 
-      {/* ── Adresse de livraison ── */}
-      <div style={{ marginTop: '28px', marginBottom: '4px' }}>
-        <h3 style={{
-          fontFamily: '"Cormorant Garamond", Georgia, serif',
-          fontStyle: 'italic',
-          fontWeight: 300,
-          fontSize: '1.15rem',
-          color: '#f5f0e8',
-          letterSpacing: '0.02em',
-          marginBottom: '16px',
-        }}>
-          Adresse de livraison
+      {/* ── Mode de livraison ── */}
+      <div style={{ marginTop: '28px', marginBottom: '24px' }}>
+        <h3 style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontStyle: 'italic', fontWeight: 300, fontSize: '1.15rem', color: '#f5f0e8', marginBottom: '16px', marginTop: 0 }}>
+          Mode de livraison
         </h3>
 
-        <div>
-          <label style={S.label}>Adresse</label>
-          <input
-            style={S.input}
-            type="text"
-            value={adresse}
-            onChange={e => setAdresse(e.target.value)}
-            placeholder="12 rue de la Paix"
-            required
-            autoComplete="address-line1"
-          />
-        </div>
-
-        <div>
-          <label style={S.label}>Complément <span style={{ opacity: 0.4 }}>(optionnel)</span></label>
-          <input
-            style={S.input}
-            type="text"
-            value={complement}
-            onChange={e => setComplement(e.target.value)}
-            placeholder="Appartement, bâtiment..."
-            autoComplete="address-line2"
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '12px' }}>
-          <div>
-            <label style={S.label}>Code postal</label>
-            <input
-              style={S.input}
-              type="text"
-              value={codePostal}
-              onChange={e => setCodePostal(e.target.value)}
-              placeholder="75001"
-              required
-              maxLength={10}
-              autoComplete="postal-code"
-            />
+        {/* Option point relais */}
+        <div
+          onClick={() => { setDeliveryMode('relay'); setSelectedRelay(null); }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', border: `1px solid ${deliveryMode === 'relay' ? '#b8996a' : 'rgba(245,240,232,0.15)'}`, background: '#141414', cursor: 'pointer', marginBottom: '8px' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `1px solid ${deliveryMode === 'relay' ? '#b8996a' : 'rgba(245,240,232,0.3)'}`, background: deliveryMode === 'relay' ? '#b8996a' : 'transparent', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {deliveryMode === 'relay' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#000' }} />}
+            </div>
+            <div>
+              <div style={{ fontSize: '0.85rem' }}>Livraison en point relais</div>
+              <div style={{ fontSize: '0.72rem', color: 'rgba(245,240,232,0.45)', marginTop: '2px' }}>2 à 4 jours ouvrés · Mondial Relay</div>
+            </div>
           </div>
-          <div>
-            <label style={S.label}>Ville</label>
-            <input
-              style={S.input}
-              type="text"
-              value={ville}
-              onChange={e => setVille(e.target.value)}
-              placeholder="Paris"
-              required
-              autoComplete="address-level2"
-            />
+          <div style={{ fontSize: '0.85rem', color: deliveryMode === 'relay' ? '#b8996a' : '#f5f0e8', whiteSpace: 'nowrap' }}>
+            {subtotal >= 70 ? 'Offerte' : '4,99 €'}
           </div>
         </div>
 
-        <div>
-          <label style={S.label}>Pays</label>
-          <select
-            style={{
-              ...S.input,
-              appearance: 'none' as const,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b8996a' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E")`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'right 14px center',
-              paddingRight: '36px',
-              cursor: 'pointer',
-            }}
-            value={pays}
-            onChange={e => setPays(e.target.value)}
-          >
-            <option value="FR">France</option>
-            <option value="BE">Belgique</option>
-            <option value="CH">Suisse</option>
-            <option value="LU">Luxembourg</option>
-            <option value="CA">Canada</option>
-          </select>
+        {/* Option domicile */}
+        <div
+          onClick={() => setDeliveryMode('home')}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', border: `1px solid ${deliveryMode === 'home' ? '#b8996a' : 'rgba(245,240,232,0.15)'}`, background: '#141414', cursor: 'pointer', marginBottom: '16px' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `1px solid ${deliveryMode === 'home' ? '#b8996a' : 'rgba(245,240,232,0.3)'}`, background: deliveryMode === 'home' ? '#b8996a' : 'transparent', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {deliveryMode === 'home' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#000' }} />}
+            </div>
+            <div>
+              <div style={{ fontSize: '0.85rem' }}>Livraison à domicile</div>
+              <div style={{ fontSize: '0.72rem', color: 'rgba(245,240,232,0.45)', marginTop: '2px' }}>3 à 5 jours ouvrés · Mondial Relay</div>
+            </div>
+          </div>
+          <div style={{ fontSize: '0.85rem', color: deliveryMode === 'home' ? '#b8996a' : '#f5f0e8', whiteSpace: 'nowrap' }}>
+            {subtotal >= 70 ? 'Offerte' : '6,99 €'}
+          </div>
         </div>
+
+        {/* Bloc recherche point relais */}
+        {deliveryMode === 'relay' && (
+          <div style={{ border: '1px solid rgba(245,240,232,0.15)', background: '#0d0d0d', padding: '20px' }}>
+            <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(245,240,232,0.5)', margin: '0 0 12px' }}>
+              Trouver un point relais
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '8px', marginBottom: relayPoints.length ? '16px' : '0' }}>
+              <input
+                style={{ ...S.input, marginBottom: 0 }}
+                placeholder="Code postal ou ville"
+                value={relaySearch}
+                onChange={e => setRelaySearch(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), searchRelayPoints())}
+              />
+              <button
+                type="button"
+                onClick={searchRelayPoints}
+                disabled={relayLoading}
+                style={{ background: '#b8996a', color: '#000', border: 'none', padding: '0 16px', fontSize: '0.7rem', letterSpacing: '0.1em', textTransform: 'uppercase' as const, cursor: relayLoading ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif', opacity: relayLoading ? 0.6 : 1, whiteSpace: 'nowrap' as const }}
+              >
+                {relayLoading ? '...' : 'Rechercher'}
+              </button>
+            </div>
+
+            {relayPoints.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+                {relayPoints.map(point => (
+                  <div
+                    key={point.id}
+                    onClick={() => setSelectedRelay(point)}
+                    style={{ padding: '12px 14px', border: `1px solid ${selectedRelay?.id === point.id ? '#b8996a' : 'rgba(245,240,232,0.08)'}`, background: selectedRelay?.id === point.id ? '#1a1410' : '#111111', cursor: 'pointer' }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '0.82rem', color: selectedRelay?.id === point.id ? '#f5f0e8' : 'rgba(245,240,232,0.7)', marginBottom: '3px' }}>
+                          {point.nom}
+                        </div>
+                        <div style={{ fontSize: '0.72rem', color: 'rgba(245,240,232,0.4)', marginBottom: '3px' }}>
+                          {point.adresse} · {point.codePostal} {point.ville}
+                        </div>
+                        {point.distance && (
+                          <div style={{ fontSize: '0.7rem', color: selectedRelay?.id === point.id ? '#b8996a' : 'rgba(184,153,106,0.5)' }}>
+                            {point.distance} m{point.horaires ? ` · ${point.horaires}` : ''}
+                          </div>
+                        )}
+                      </div>
+                      <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `1px solid ${selectedRelay?.id === point.id ? '#b8996a' : 'rgba(245,240,232,0.2)'}`, background: selectedRelay?.id === point.id ? '#b8996a' : 'transparent', flexShrink: 0, marginTop: '2px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {selectedRelay?.id === point.id && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#000' }} />}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* ── Adresse de livraison (domicile uniquement) ── */}
+      {deliveryMode === 'home' && (
+        <div style={{ marginBottom: '4px' }}>
+          <h3 style={{ fontFamily: '"Cormorant Garamond", Georgia, serif', fontStyle: 'italic', fontWeight: 300, fontSize: '1.15rem', color: '#f5f0e8', letterSpacing: '0.02em', marginBottom: '16px', marginTop: 0 }}>
+            Adresse de livraison
+          </h3>
+
+          <div>
+            <label style={S.label}>Adresse</label>
+            <input
+              style={S.input}
+              type="text"
+              value={adresse}
+              onChange={e => setAdresse(e.target.value)}
+              placeholder="12 rue de la Paix"
+              required
+              autoComplete="address-line1"
+            />
+          </div>
+
+          <div>
+            <label style={S.label}>Complément <span style={{ opacity: 0.4 }}>(optionnel)</span></label>
+            <input
+              style={S.input}
+              type="text"
+              value={complement}
+              onChange={e => setComplement(e.target.value)}
+              placeholder="Appartement, bâtiment..."
+              autoComplete="address-line2"
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '12px' }}>
+            <div>
+              <label style={S.label}>Code postal</label>
+              <input
+                style={S.input}
+                type="text"
+                value={codePostal}
+                onChange={e => setCodePostal(e.target.value)}
+                placeholder="75001"
+                required
+                maxLength={10}
+                autoComplete="postal-code"
+              />
+            </div>
+            <div>
+              <label style={S.label}>Ville</label>
+              <input
+                style={S.input}
+                type="text"
+                value={ville}
+                onChange={e => setVille(e.target.value)}
+                placeholder="Paris"
+                required
+                autoComplete="address-level2"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label style={S.label}>Pays</label>
+            <select
+              style={{
+                ...S.input,
+                appearance: 'none' as const,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b8996a' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 14px center',
+                paddingRight: '36px',
+                cursor: 'pointer',
+              }}
+              value={pays}
+              onChange={e => setPays(e.target.value)}
+            >
+              <option value="FR">France</option>
+              <option value="BE">Belgique</option>
+              <option value="CH">Suisse</option>
+              <option value="LU">Luxembourg</option>
+              <option value="CA">Canada</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       <div style={{ marginTop: '24px' }}>
         <PaymentElement options={{ layout: 'tabs' }} />
@@ -435,6 +593,9 @@ export default function CheckoutPage() {
   const [loading,      setLoading]      = useState(true);
   const [error,        setError]        = useState('');
 
+  const [deliveryMode,  setDeliveryMode]  = useState<'relay' | 'home'>('relay');
+  const [selectedRelay, setSelectedRelay] = useState<RelayPoint | null>(null);
+
   useEffect(() => {
     const raw  = localStorage.getItem('volombe_cart');
     const cart: CartItem[] = raw ? JSON.parse(raw) : [];
@@ -449,7 +610,7 @@ export default function CheckoutPage() {
     fetch('/api/payment-intent', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(cart),
+      body:    JSON.stringify({ items: cart, deliveryMode: 'relay' }),
     })
       .then(r => r.json())
       .then(data => {
@@ -463,9 +624,9 @@ export default function CheckoutPage() {
       });
   }, []);
 
-  const subtotal      = items.reduce((s, i) => s + i.price * i.qty, 0);
-  const shippingDisplay = subtotal >= 70 ? 0 : 5.99;
-  const grandTotal    = subtotal + shippingDisplay;
+  const subtotal     = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const shippingCost = subtotal >= 70 ? 0 : (deliveryMode === 'relay' ? 4.99 : 6.99);
+  const grandTotal   = subtotal + shippingCost;
 
   /* ── États de chargement / erreur ── */
   if (loading) {
@@ -529,12 +690,19 @@ export default function CheckoutPage() {
           <div style={S.divider} />
 
           <div style={{ ...S.cartRow, fontSize: '0.8rem', color: 'rgba(245,240,232,0.5)' }}>
-            <span>Livraison</span>
-            <span style={{ color: shippingDisplay === 0 ? '#6dbf8e' : 'rgba(245,240,232,0.5)' }}>
-              {shippingDisplay === 0 ? 'Offerte' : `${shippingDisplay.toFixed(2).replace('.', ',')} €`}
+            <div>
+              <span>Livraison</span>
+              {selectedRelay && deliveryMode === 'relay' && (
+                <div style={{ fontSize: '0.68rem', color: 'rgba(184,153,106,0.7)', marginTop: '3px', letterSpacing: '0.02em' }}>
+                  {selectedRelay.nom}
+                </div>
+              )}
+            </div>
+            <span style={{ color: shippingCost === 0 ? '#6dbf8e' : 'rgba(245,240,232,0.5)' }}>
+              {shippingCost === 0 ? 'Offerte' : `${shippingCost.toFixed(2).replace('.', ',')} €`}
             </span>
           </div>
-          {shippingDisplay > 0 && (
+          {shippingCost > 0 && (
             <p style={{ fontSize: '0.68rem', color: 'rgba(184,153,106,0.7)', marginTop: '-4px', letterSpacing: '0.05em' }}>
               Offerte dès 70 €
             </p>
@@ -565,7 +733,15 @@ export default function CheckoutPage() {
               stripe={stripePromise}
               options={{ clientSecret, appearance: stripeAppearance, locale: 'fr' }}
             >
-              <CheckoutForm grandTotal={grandTotal} items={items} clientSecret={clientSecret} />
+              <CheckoutForm
+                grandTotal={grandTotal}
+                items={items}
+                clientSecret={clientSecret}
+                deliveryMode={deliveryMode}
+                setDeliveryMode={setDeliveryMode}
+                selectedRelay={selectedRelay}
+                setSelectedRelay={setSelectedRelay}
+              />
             </Elements>
           )}
         </section>

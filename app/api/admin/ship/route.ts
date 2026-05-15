@@ -4,6 +4,7 @@ import ShippingConfirmation from '@/lib/emails/shippingConfirmation'
 import { render } from '@react-email/render'
 import { createElement } from 'react'
 import { createHash } from 'crypto'
+import Stripe from 'stripe'
 import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
@@ -12,13 +13,17 @@ function md5(str: string): string {
   return createHash('md5').update(str, 'latin1').digest('hex').toUpperCase()
 }
 
-async function createMRLabel(order: Record<string, any>): Promise<{ trackingNumber: string; labelUrl: string }> {
+async function createMRLabel(
+  order: Record<string, any>,
+  deliveryMode: 'home' | 'relay',
+  relayId: string
+): Promise<{ trackingNumber: string; labelUrl: string }> {
   const enseigne  = process.env.MR_CODE_ENSEIGNE!
   const clePrivee = process.env.MR_CLE_PRIVEE!
   const addr      = (order.shipping_address ?? {}) as Record<string, string>
 
-  const modeCol              = 'CU'
-  const modeLiv              = '24R'
+  const modeCol              = 'REL'
+  const modeLiv              = deliveryMode === 'home' ? 'LD1' : '24R'
   const nDossier             = ''
   const nClient              = ''
   const expe_Langage         = 'FR'
@@ -45,7 +50,7 @@ async function createMRLabel(order: Record<string, any>): Promise<{ trackingNumb
   const assurance            = '0'
   const texte                = ''
   const livraisonInstructions = ''
-  const numPointRelais       = ''
+  const numPointRelais       = deliveryMode === 'relay' ? relayId : ''
 
   const securityInput = [
     enseigne, modeCol, modeLiv, nDossier, nClient,
@@ -102,7 +107,7 @@ async function createMRLabel(order: Record<string, any>): Promise<{ trackingNumb
     method: 'POST',
     headers: {
       'Content-Type': 'text/xml; charset=utf-8',
-      'SOAPAction':   'http://www.mondialrelay.fr/webservice/WSI2_CreerEtiquette',
+      SOAPAction: 'http://www.mondialrelay.fr/webservice/WSI2_CreerEtiquette',
     },
     body: soapBody,
   })
@@ -140,11 +145,24 @@ export async function POST(request: NextRequest) {
   if (fetchErr || !order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
   if (order.status === 'shipped') return NextResponse.json({ error: 'Already shipped' }, { status: 400 })
 
+  // Lire deliveryMode et relayId depuis les métadonnées du PaymentIntent
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-03-25.dahlia' })
+  let deliveryMode: 'home' | 'relay' = 'relay'
+  let relayId = ''
+
+  try {
+    const pi = await stripe.paymentIntents.retrieve(order.stripe_payment_intent_id as string)
+    deliveryMode = pi.metadata?.deliveryMode === 'home' ? 'home' : 'relay'
+    relayId      = pi.metadata?.relayId ?? ''
+  } catch (piErr: any) {
+    console.error('[MR] PI retrieve error:', piErr?.message)
+  }
+
   let trackingNumber: string
   let labelUrl: string
 
   try {
-    const result = await createMRLabel(order)
+    const result = await createMRLabel(order, deliveryMode, relayId)
     trackingNumber = result.trackingNumber
     labelUrl       = result.labelUrl
   } catch (mrErr: any) {
