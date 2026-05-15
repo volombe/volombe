@@ -102,7 +102,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: `Mondial Relay STAT=${stat}` }, { status: 500 })
   }
 
-  const blocks = extractAllBlocks(xml, 'PointRelais_Details')
+  // L'API MR retourne des tags <PR01>, <PR02>, ..., <PRxx>
+  const blocks: string[] = []
+  const prRegex = /<(PR\d+)>([\s\S]*?)<\/\1>/g
+  let prMatch: RegExpExecArray | null
+  while ((prMatch = prRegex.exec(xml)) !== null) blocks.push(prMatch[2])
 
   const points = blocks
     .map(block => ({
