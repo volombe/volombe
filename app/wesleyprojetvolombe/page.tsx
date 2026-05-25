@@ -34,8 +34,6 @@ interface Order {
   shipped_at: string | null
 }
 
-const ADMIN_PWD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? ''
-
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('fr-FR', {
     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -58,7 +56,7 @@ export default function AdminPage() {
   const [toast, setToast]         = useState<{ msg: string; ok: boolean } | null>(null)
 
   useEffect(() => {
-    if (sessionStorage.getItem('admin_ok') === '1') {
+    if (sessionStorage.getItem('volombe_admin_token')) {
       setAuthed(true)
     }
   }, [])
@@ -77,24 +75,34 @@ export default function AdminPage() {
     setLoading(true)
     try {
       const res = await fetch('/api/admin/orders', {
-        headers: { Authorization: `Bearer ${ADMIN_PWD}` },
+        headers: { Authorization: `Bearer ${sessionStorage.getItem('volombe_admin_token') ?? ''}` },
       })
       if (!res.ok) throw new Error('Erreur ' + res.status)
       setOrders(await res.json())
-    } catch (e: any) {
-      showToast('Erreur chargement : ' + e.message, false)
+    } catch (e: unknown) {
+      showToast('Erreur chargement : ' + (e instanceof Error ? e.message : String(e)), false)
     } finally {
       setLoading(false)
     }
   }
 
-  function login() {
-    if (pwdInput === ADMIN_PWD) {
-      sessionStorage.setItem('admin_ok', '1')
-      setAuthed(true)
-      setLoginErr('')
-    } else {
-      setLoginErr('Mot de passe incorrect')
+  async function login() {
+    setLoginErr('')
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwdInput }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        sessionStorage.setItem('volombe_admin_token', pwdInput)
+        setAuthed(true)
+      } else {
+        setLoginErr(data.error ?? 'Mot de passe incorrect.')
+      }
+    } catch {
+      setLoginErr('Erreur réseau. Réessayez.')
     }
   }
 
@@ -105,7 +113,7 @@ export default function AdminPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${ADMIN_PWD}`,
+          Authorization: `Bearer ${sessionStorage.getItem('volombe_admin_token') ?? ''}`,
         },
         body: JSON.stringify({ orderId }),
       })
@@ -113,8 +121,8 @@ export default function AdminPage() {
       if (!res.ok) throw new Error(data.error ?? 'Erreur ' + res.status)
       showToast(`Expédié ✓  Suivi : ${data.trackingNumber}`)
       fetchOrders()
-    } catch (e: any) {
-      showToast('Erreur : ' + e.message, false)
+    } catch (e: unknown) {
+      showToast('Erreur : ' + (e instanceof Error ? e.message : String(e)), false)
     } finally {
       setShipping(s => ({ ...s, [orderId]: false }))
     }
@@ -166,7 +174,7 @@ export default function AdminPage() {
           <button onClick={fetchOrders} style={s.btnGhost} disabled={loading}>
             {loading ? '…' : 'Actualiser'}
           </button>
-          <button onClick={() => { sessionStorage.removeItem('admin_ok'); setAuthed(false) }} style={s.btnGhost}>
+          <button onClick={() => { sessionStorage.removeItem('volombe_admin_token'); setAuthed(false) }} style={s.btnGhost}>
             Déconnexion
           </button>
         </div>
