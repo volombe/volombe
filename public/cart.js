@@ -120,28 +120,83 @@ function cartRefreshPanel() {
     return;
   }
 
-  itemsEl.innerHTML = items.map(item => `
-    <div class="cart-item" data-id="${item.id}" data-size="${item.size}">
-      <div class="cart-item__img">
-        <img src="${item.img}" alt="${item.name}" />
-      </div>
-      <div class="cart-item__info">
-        <p class="cart-item__name">${item.name}</p>
-        <p class="cart-item__meta">Taille ${item.size} · ${item.price} €</p>
-        <div class="cart-item__qty">
-          <button class="cart-qty-btn cart-qty-down" data-id="${item.id}" data-size="${item.size}">−</button>
-          <span class="cart-qty-val">${item.qty}</span>
-          <button class="cart-qty-btn cart-qty-up" data-id="${item.id}" data-size="${item.size}">+</button>
-        </div>
-      </div>
-      <div class="cart-item__right">
-        <span class="cart-item__total">${(item.price * item.qty).toFixed(2).replace('.', ',')} €</span>
-        <button class="cart-item__remove" data-id="${item.id}" data-size="${item.size}" aria-label="Supprimer">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-    </div>
-  `).join('');
+  itemsEl.innerHTML = '';
+  items.forEach(item => {
+    const cartItem = document.createElement('div');
+    cartItem.className = 'cart-item';
+    cartItem.dataset.id   = item.id;
+    cartItem.dataset.size = item.size;
+
+    // .cart-item__img
+    const imgWrap = document.createElement('div');
+    imgWrap.className = 'cart-item__img';
+    const img = document.createElement('img');
+    img.src = item.img || '';
+    img.alt = item.name;           // textContent équivalent pour alt
+    imgWrap.appendChild(img);
+
+    // .cart-item__info
+    const info    = document.createElement('div');
+    info.className = 'cart-item__info';
+
+    const nameEl  = document.createElement('p');
+    nameEl.className  = 'cart-item__name';
+    nameEl.textContent = item.name;
+
+    const metaEl  = document.createElement('p');
+    metaEl.className  = 'cart-item__meta';
+    metaEl.textContent = 'Taille ' + item.size + ' · ' + item.price + ' €';
+
+    const qtyDiv  = document.createElement('div');
+    qtyDiv.className = 'cart-item__qty';
+
+    const btnDown = document.createElement('button');
+    btnDown.className    = 'cart-qty-btn cart-qty-down';
+    btnDown.dataset.id   = item.id;
+    btnDown.dataset.size = item.size;
+    btnDown.textContent  = '−';
+
+    const qtySpan = document.createElement('span');
+    qtySpan.className   = 'cart-qty-val';
+    qtySpan.textContent = String(item.qty);
+
+    const btnUp   = document.createElement('button');
+    btnUp.className    = 'cart-qty-btn cart-qty-up';
+    btnUp.dataset.id   = item.id;
+    btnUp.dataset.size = item.size;
+    btnUp.textContent  = '+';
+
+    qtyDiv.appendChild(btnDown);
+    qtyDiv.appendChild(qtySpan);
+    qtyDiv.appendChild(btnUp);
+    info.appendChild(nameEl);
+    info.appendChild(metaEl);
+    info.appendChild(qtyDiv);
+
+    // .cart-item__right
+    const right     = document.createElement('div');
+    right.className = 'cart-item__right';
+
+    const totalSpan     = document.createElement('span');
+    totalSpan.className = 'cart-item__total';
+    totalSpan.textContent = (item.price * item.qty).toFixed(2).replace('.', ',') + ' €';
+
+    const btnRemove     = document.createElement('button');
+    btnRemove.className = 'cart-item__remove';
+    btnRemove.dataset.id   = item.id;
+    btnRemove.dataset.size = item.size;
+    btnRemove.setAttribute('aria-label', 'Supprimer');
+    // SVG statique littéral — aucune variable, innerHTML sûr ici
+    btnRemove.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+
+    right.appendChild(totalSpan);
+    right.appendChild(btnRemove);
+
+    cartItem.appendChild(imgWrap);
+    cartItem.appendChild(info);
+    cartItem.appendChild(right);
+    itemsEl.appendChild(cartItem);
+  });
 
   const total = items.reduce((s, i) => s + i.price * i.qty, 0);
   const count = items.reduce((s, i) => s + i.qty, 0);
