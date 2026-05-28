@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
+import Link from 'next/link';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
@@ -679,9 +680,9 @@ export default function CheckoutPage() {
       <div style={{ ...S.page, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center', maxWidth: '400px', padding: '24px' }}>
           <p style={S.errorMsg}>⚠ {error}</p>
-          <a href="/" style={{ ...S.btn, display: 'inline-block', marginTop: '20px', textDecoration: 'none', padding: '12px 28px', width: 'auto' }}>
+          <Link href="/" style={{ ...S.btn, display: 'inline-block', marginTop: '20px', textDecoration: 'none', padding: '12px 28px', width: 'auto' }}>
             Retour à la boutique
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -700,7 +701,7 @@ export default function CheckoutPage() {
 
       {/* Header */}
       <header style={S.header}>
-        <a href="/" style={S.logo}>VOLOMBE</a>
+        <Link href="/" style={S.logo}>VOLOMBE</Link>
       </header>
 
       {/* Layout deux colonnes */}

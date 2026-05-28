@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 
 export default function SuccessPage() {
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function SuccessPage() {
           Expédition sous 2–3 jours ouvrés.
         </p>
 
-        <a
+        <Link
           href="/"
           style={{
             display: 'inline-block',
@@ -86,7 +87,7 @@ export default function SuccessPage() {
           }}
         >
           Retour à la boutique
-        </a>
+        </Link>
       </div>
     </main>
   );

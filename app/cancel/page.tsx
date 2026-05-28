@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function CancelPage() {
   return (
     <main style={{
@@ -62,7 +64,7 @@ export default function CancelPage() {
           >
             Reprendre le paiement
           </a>
-          <a
+          <Link
             href="/"
             style={{
               display: 'inline-block',
@@ -78,7 +80,7 @@ export default function CancelPage() {
             }}
           >
             Retour à la boutique
-          </a>
+          </Link>
         </div>
       </div>
     </main>
