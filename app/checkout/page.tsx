@@ -18,7 +18,8 @@ const stripePromise = loadStripe(
 interface CartItem {
   id: string;
   name: string;
-  price: number;
+  unitPrice: number;  // prix serveur validé — source de vérité pour les calculs
+  price?: number;     // héritage localStorage, jamais utilisé dans les calculs
   size: string;
   qty: number;
   img?: string;
@@ -244,7 +245,7 @@ function CheckoutForm({
     FR: 'France', BE: 'Belgique', CH: 'Suisse', LU: 'Luxembourg', CA: 'Canada',
   };
 
-  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal = items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
 
   const searchRelayPoints = async () => {
     if (!relaySearch.trim()) return;
@@ -597,34 +598,68 @@ export default function CheckoutPage() {
   const [selectedRelay, setSelectedRelay] = useState<RelayPoint | null>(null);
 
   useEffect(() => {
-    const raw  = localStorage.getItem('volombe_cart');
-    const cart: CartItem[] = raw ? JSON.parse(raw) : [];
+    const raw = localStorage.getItem('volombe_cart');
+    const rawCart: Array<{ id: string; size: string; qty: number; img?: string }> =
+      raw ? JSON.parse(raw) : [];
 
-    if (!cart.length) {
+    if (!rawCart.length) {
       window.location.href = '/';
       return;
     }
 
-    setItems(cart);
+    (async () => {
+      // 1. Valider les prix côté serveur — l'affichage utilise ces prix, pas localStorage
+      let validatedItems: CartItem[];
+      try {
+        const vRes = await fetch('/api/validate-cart', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            items: rawCart.map(i => ({ id: i.id, size: i.size, qty: i.qty })),
+          }),
+        });
+        const vData: unknown = await vRes.json();
+        if (!vRes.ok) {
+          const msg = (vData as { error?: string }).error ?? 'Produit non reconnu. Vérifiez votre panier.';
+          setError(msg);
+          setLoading(false);
+          return;
+        }
+        // Merge les imgs depuis localStorage (affichage uniquement, sans impact sur le prix)
+        validatedItems = ((vData as { items: CartItem[] }).items).map(v => ({
+          ...v,
+          img: rawCart.find(r => r.id === v.id && r.size === v.size)?.img,
+        }));
+      } catch {
+        setError('Impossible de valider le panier. Réessayez.');
+        setLoading(false);
+        return;
+      }
 
-    fetch('/api/payment-intent', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ items: cart, deliveryMode: 'relay' }),
-    })
-      .then(r => r.json())
-      .then(data => {
-        if (data.error) { setError(data.error); }
-        else            { setClientSecret(data.clientSecret); }
-        setLoading(false);
-      })
-      .catch(() => {
+      setItems(validatedItems);
+
+      // 2. Créer le PaymentIntent avec les items validés (unitPrice serveur)
+      try {
+        const piRes = await fetch('/api/payment-intent', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ items: validatedItems, deliveryMode: 'relay' }),
+        });
+        const piData: unknown = await piRes.json();
+        if ((piData as { error?: string }).error) {
+          setError((piData as { error: string }).error);
+        } else {
+          setClientSecret((piData as { clientSecret: string }).clientSecret);
+        }
+      } catch {
         setError('Impossible de charger le paiement. Réessayez.');
-        setLoading(false);
-      });
+      }
+
+      setLoading(false);
+    })();
   }, []);
 
-  const subtotal     = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal     = items.reduce((s, i) => s + i.unitPrice * i.qty, 0);
   const shippingCost = subtotal >= 70 ? 0 : (deliveryMode === 'relay' ? 4.99 : 6.99);
   const grandTotal   = subtotal + shippingCost;
 
@@ -682,7 +717,7 @@ export default function CheckoutPage() {
                 <div style={S.cartRowMeta}>Taille {item.size} · Qté {item.qty}</div>
               </div>
               <div style={{ whiteSpace: 'nowrap', fontWeight: 400 }}>
-                {(item.price * item.qty).toFixed(2).replace('.', ',')} €
+                {(item.unitPrice * item.qty).toFixed(2).replace('.', ',')} €
               </div>
             </div>
           ))}
