@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Métadonnées items depuis le PaymentIntent
-    const metaItems: Array<{ id: string; size: string; qty: number; name: string; price: number }> =
+    const metaItems: Array<{ id: string; size: string; qty: number; name: string; unitPrice: number }> =
       pi.metadata?.items ? JSON.parse(pi.metadata.items) : []
 
     // ── 1. STOCK — décrémenter dans Supabase ──────────────────────────
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
         const items = metaItems.map((item) => ({
           name:      item.name  ?? item.id ?? 'Produit',
           quantity:  item.qty   ?? 1,
-          unitPrice: item.price ?? 0,
+          unitPrice: item.unitPrice ?? 0,
           size:      item.size  ?? '',
         }))
 

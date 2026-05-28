@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { validateCartItems } from '@/lib/products'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,18 +8,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-03-25.dahlia',
 })
 
-interface CartItem {
-  id: string
-  name: string
-  size: string
-  price: number
-  qty: number
+interface RawCartItem {
+  id?: unknown
+  size?: unknown
+  qty?: unknown
+  // price ignoré — le prix réel vient du catalogue serveur (lib/products.ts)
+  [key: string]: unknown
 }
 
 interface UpdateBody {
   paymentIntentId: string
-  items: CartItem[]
-  deliveryMode: 'home' | 'relay'
+  items: RawCartItem[]
+  deliveryMode?: 'home' | 'relay'
   relayId?: string
   relayName?: string
   relayAddress?: string
@@ -27,7 +28,8 @@ interface UpdateBody {
 export async function POST(req: NextRequest) {
   try {
     const {
-      paymentIntentId, items,
+      paymentIntentId,
+      items,
       deliveryMode = 'relay',
       relayId      = '',
       relayName    = '',
@@ -38,7 +40,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 })
     }
 
-    const subtotal     = items.reduce((sum, i) => sum + i.price * i.qty, 0)
+    let validatedItems
+    try {
+      validatedItems = validateCartItems(items)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Panier invalide'
+      return NextResponse.json({ error: msg }, { status: 400 })
+    }
+
+    const subtotal     = validatedItems.reduce((sum, i) => sum + i.unitPrice * i.qty, 0)
     const shippingCost = subtotal >= 70 ? 0 : (deliveryMode === 'relay' ? 4.99 : 6.99)
     const amount       = Math.round((subtotal + shippingCost) * 100)
 
@@ -46,7 +56,13 @@ export async function POST(req: NextRequest) {
       amount,
       metadata: {
         items: JSON.stringify(
-          items.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty, price: i.price }))
+          validatedItems.map(i => ({
+            id:        i.id,
+            name:      i.name,
+            size:      i.size,
+            qty:       i.qty,
+            unitPrice: i.unitPrice,
+          }))
         ),
         shippingCost: String(shippingCost),
         deliveryMode,
@@ -58,8 +74,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, amount })
   } catch (err: unknown) {
-    const e = err as { message?: string }
-    console.error('[Volombe] Update PaymentIntent error:', e?.message)
-    return NextResponse.json({ error: e?.message }, { status: 500 })
+    const msg = err instanceof Error ? err.message : 'Erreur inconnue'
+    console.error('[Volombe] Update PaymentIntent error:', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
   }
 }
